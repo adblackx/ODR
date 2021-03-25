@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# on ignore tout ce qui se trouve dans data
+data/
