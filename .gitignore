@@ -130,3 +130,6 @@ dmypy.json
 
 # on ignore tout ce qui se trouve dans data
 data/
+input/
+saved/
+datasets/

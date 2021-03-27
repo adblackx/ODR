@@ -1,12 +1,14 @@
 {
-    "name": "Mnist_LeNet", // training session name
-    "n_gpu": 1, // number of GPUs to use for training.
+    "name": "Mnist_LeNet", 
+    "n_gpu": 0, 
 
     "arch": {
-        "type": "odr_model", // name of our model
+        "type": "Odr_model",
+        "args": {}
     },
+
     "data_loader": {
-        "type": "odr_data_loader", // selecting data loader
+        "type": "odr_data_loader", 
         "args":{
             "data_dir": "data/",
             "batch_size": 128,
@@ -35,7 +37,7 @@
         }
     },
     "trainer": {
-        "epochs": 100,
+        "epochs": 2,
 
         "save_dir": "saved/",
         "save_period": 1,

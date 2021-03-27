@@ -7,8 +7,8 @@ import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
 from parse_config import ConfigParser
-from trainer import Trainer
-from utils import prepare_device
+from trainer.trainer import Trainer
+from utils.util import prepare_device
 
 
 # fix random seeds for reproducibility
@@ -19,7 +19,8 @@ torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
 
 def main(config):
-    logger = config.get_logger('train')
+    print("Debut de la fonction main: \n")
+    #logger = config.get_logger('train')
 
     # setup data_loader instances
     data_loader = config.init_obj('data_loader', module_data) # pour faire simple data_loader dans le fichier json doit avoir les arguments qui correspondent à
@@ -28,7 +29,7 @@ def main(config):
 
     # build model architecture, then print to console
     model = config.init_obj('arch', module_arch)
-    logger.info(model)
+    #logger.info(model)
 
     # prepare for (multi-device) GPU training
     device, device_ids = prepare_device(config['n_gpu'])
@@ -54,6 +55,8 @@ def main(config):
 
     trainer.train()
 
+    print("FIN DU PROGRAMME")
+
 
 if __name__ == '__main__': #ne pas modifier cette fonction
     args = argparse.ArgumentParser(description='PyTorch Template')
@@ -71,4 +74,5 @@ if __name__ == '__main__': #ne pas modifier cette fonction
         CustomArgs(['--bs', '--batch_size'], type=int, target='data_loader;args;batch_size')
     ]
     config = ConfigParser.from_args(args, options)
+    #print(torch.cuda.is_available()) # affiche si cuda est dispo ou non
     main(config)

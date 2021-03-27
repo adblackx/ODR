@@ -4,8 +4,8 @@ from pathlib import Path
 from functools import reduce, partial
 from operator import getitem
 from datetime import datetime
-from logger import setup_logging
-from utils import read_json, write_json
+#from logger import setup_logging
+from utils.util import read_json, write_json
 
 
 class ConfigParser:
@@ -39,13 +39,14 @@ class ConfigParser:
         # save updated config file to the checkpoint dir
         write_json(self.config, self.save_dir / 'config.json')
 
+        # on en a pas besoin, on ne se connecte pas
         # configure logging module
-        setup_logging(self.log_dir)
+        """setup_logging(self.log_dir)
         self.log_levels = {
             0: logging.WARNING,
             1: logging.INFO,
             2: logging.DEBUG
-        }
+        }"""
 
     @classmethod
     def from_args(cls, args, options=''):
@@ -109,6 +110,7 @@ class ConfigParser:
         """Access items like ordinary dict."""
         return self.config[name]
 
+    # ON NE SEN SERT PAS
     def get_logger(self, name, verbosity=2):
         msg_verbosity = 'verbosity option {} is invalid. Valid options are {}.'.format(verbosity, self.log_levels.keys())
         assert verbosity in self.log_levels, msg_verbosity
