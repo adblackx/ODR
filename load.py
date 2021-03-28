@@ -32,6 +32,7 @@ def main(config):
 
     data_loader = config.init_obj('data_loader', module_data)
 
+    valid_data_loader = data_loader.split_validation()
     #train_loader = odr_data_loader(**args)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -40,6 +41,7 @@ def main(config):
     if device =='cuda':
         torch.cuda.manual_seed_all(1234)
 
+    
     model = models.alexnet(pretrained=False).to(device)
     model.train()
 
@@ -72,11 +74,11 @@ def main(config):
         
         print('Epoch : {}, train accuracy : {}, train loss : {}'.format(epoch+1, epoch_accuracy,epoch_loss))
         
-    """
+
     with torch.no_grad():
             epoch_val_accuracy=0
             epoch_val_loss =0
-            for data, label in test_loader:
+            for data, label in valid_data_loader:
                 data = data.to(device)
                 label = label.to(device)
                 
@@ -85,11 +87,11 @@ def main(config):
                 
                 
                 acc = ((val_output.argmax(dim=1) == label).float().mean())
-                epoch_val_accuracy += acc/ len(test_loader)
-                epoch_val_loss += val_loss/ len(test_loader)
+                epoch_val_accuracy += acc/ len(valid_data_loader)
+                epoch_val_loss += val_loss/ len(valid_data_loader)
                 
             print('Epoch : {}, val_accuracy : {}, val_loss : {}'.format(epoch+1, epoch_val_accuracy,epoch_val_loss))
-    """
+    
 
 
     print("FIN DU PROGRAMME")

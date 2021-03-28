@@ -7,6 +7,8 @@ python train.py -c config.json
 
 L'éxecution ne marche pas pour le moment.
 
+Pour tester 
+
 Pour les dossiers:
 
 * Dans model on met le modèle et/ou la fonction de cout, on devra se crée notre propre model, pour une classe qui est un réseau de neurone, elle doit hériter de nn.module
