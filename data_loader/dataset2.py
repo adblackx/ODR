@@ -52,7 +52,7 @@ def countNbElementByClasses(labels, msg = ""):
     for i in np.unique(labels):
         print("nb classes" , i , " : ", np.count_nonzero(labels == i))
 
-def splitTrainTest(filepath='data/full_df.csv', test_size=0.05, test_equal_repartition = True, Shuffle = False):
+def splitTrainTest(filepath, test_size=0.05, test_equal_repartition = True, Shuffle = False):
     
     data = pd.read_csv(filepath)
         
