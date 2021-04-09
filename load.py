@@ -49,7 +49,7 @@ def main(config):
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(device)
-
+    
     torch.manual_seed(1234)
     if device =='cuda':
         torch.cuda.manual_seed_all(1234)
@@ -105,7 +105,7 @@ def main(config):
                     epoch_val_loss += val_loss/ len(valid_data_loader)
                     
                 print('Epoch : {}, val_accuracy : {}, val_loss : {}'.format(epoch+1, epoch_val_accuracy,epoch_val_loss))
-    
+        
 
 
     print("FIN DU PROGRAMME")
