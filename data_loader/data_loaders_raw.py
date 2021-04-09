@@ -35,9 +35,9 @@ class Dataset(torch.utils.data.Dataset):
                 left_labels_list.append(data['Left Text'][i])
                 left_name_list.append(data['Left-Fundus'][i])
                 
-            #if data['Right Text'][i] in ListeMaladie:
-            #    right_labels_list.append (data['Right Text'][i])
-            #    right_name_list.append (data['Right-Fundus'][i])
+            if data['Right Text'][i] in ListeMaladie:
+                right_labels_list.append (data['Right Text'][i])
+                right_name_list.append (data['Right-Fundus'][i])
             
         #print ("label left", len(left_labels_list))
         #print ("label right", len(right_labels_list))
