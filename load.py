@@ -38,7 +38,7 @@ def main(config):
     #mes modifs
     data_dir='data/full_df.csv'
 
-    x_train, y_train, x_test, y_test = splitTrainTest(filepath = data_dir)
+    x_train, y_train, x_test, y_test = splitTrainTest(data_dir)
     
     data_dir = "data/preprocessed_images/"
     train_loader = module_data.odr_data_loader(data_dir, x_train, y_train, 100, True, 0, 2)
@@ -82,8 +82,8 @@ def main(config):
             optimizer.step()
 
             acc = ((output.argmax(dim=1) == label).float().mean())
-            epoch_accuracy += acc/len(data_loader)
-            epoch_loss += loss/len(data_loader)
+            epoch_accuracy += acc/len(train_loader)
+            epoch_loss += loss/len(train_loader)
 
         
         print('Epoch : {}, train accuracy : {}, train loss : {}'.format(epoch+1, epoch_accuracy,epoch_loss))
