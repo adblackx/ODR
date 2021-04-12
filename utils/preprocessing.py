@@ -22,6 +22,10 @@ import numpy as np
 import pandas as pd
 import os
 import cv2
+import re
+
+from keyphrases import diagnostic_keyphrases, diagnostic_normale_or_not
+
 
 def crop(image): 
 	image=np.asarray (image)
@@ -109,70 +113,6 @@ def to_grayscale(image):
 
 def generateCsvFromRaw(DATA_PATH):
 	data = pd.read_excel(DATA_PATH)
-
-	diagnostic_keyphrases = {'N': ['normal fundus'], 
-	 'D': ['nonproliferative retinopathy',
-		'non proliferative retinopathy','mild nonproliferative retinopathy',
-		'proliferative retinopathy','diabetic retinopathy'],
-	 'G': ['glaucoma'],
-	 'C': ['cataract'],
-	 'A': ['age-related macular degeneration'],
-	 'H': ['hypertensive'],
-	 'M': ['myopi'],
-	 'O': ['macular epiretinal membrane',
-		'epiretinal membrane',
-		'drusen',
-		'myelinated nerve fibers',
-		'vitreous degeneration',
-		'refractive media opacity',
-		'spotted membranous change',
-		'tessellated fundus',
-		'maculopathy',
-		'chorioretinal atrophy',
-		'branch retinal vein occlusion',
-		'retinal pigmentation',
-		'white vessel',
-		'post retinal laser surgery',
-		'epiretinal membrane over the macula',
-		'retinitis pigmentosa',
-		'central retinal vein occlusion',
-		'optic disc edema',
-		'post laser photocoagulation',
-		'retinochoroidal coloboma',
-		'atrophic change',
-		'optic nerve atrophy',
-		'old branch retinal vein occlusion',
-		'depigmentation of the retinal pigment epithelium',
-		'chorioretinal atrophy with pigmentation proliferation',
-		'central retinal artery occlusion',
-		'old chorioretinopathy',
-		'pigment epithelium proliferation',
-		'retina fold',
-		'abnormal pigment ',
-		'idiopathic choroidal neovascularization',
-		'branch retinal artery occlusion',
-		'vessel tortuosity',
-		'pigmentation disorder',
-		'rhegmatogenous retinal detachment',
-		'macular hole',
-		'morning glory syndrome',
-		'atrophy',
-		'laser spot',
-		'arteriosclerosis',
-		'asteroid hyalosis',
-		'congenital choroidal coloboma',
-		'macular coloboma',
-		'optic discitis',
-		'oval yellow-white atrophy',
-		'wedge-shaped change',
-		'wedge white line change',
-		'retinal artery macroaneurysm',
-		'retinal vascular sheathing',
-		'suspected abnormal color of  optic disc',
-		'suspected retinal vascular sheathing',
-		'suspected retinitis pigmentosa',
-		'silicone oil eye']}
-	
 	LeftText=[]
 	for i, row in data.iterrows():
 			text=row['Left-Diagnostic Keywords']
@@ -194,22 +134,73 @@ def generateCsvFromRaw(DATA_PATH):
 			text=row['Right-Diagnostic Keywords']
 			Listecle=[]
 			for cle, valeur in diagnostic_keyphrases.items():
-					valeur = diagnostic_keyphrases.get (cle)
+					valeur = diagnostic_keyphrases.get(cle)
 					for keyword in valeur:
 							if keyword in text:
-									Listecle.append (cle)
+									Listecle.append(cle)
 						 
 			Listecle=list(set(Listecle))
 			RightText.append (Listecle)
 	
 	data['Right Text']= RightText
-	key_columns = ['ID', 'Patient Age','Patient Sex','Left-Fundus','Right-Fundus','N','D','G','C','A','H','M','O','Left Text','Right Text'] 
+	rf = data['Right-Fundus']
+	data['filename']= data['Left-Fundus'] 
+	key_columns = ['ID', 'Patient Age','Patient Sex','filename','label']
 	data=data [key_columns]
-	data.head()
-	
-	df=data
-	df.to_csv('full_df.csv', mode='a', header=key_columns, index=False, encoding='utf-8')
+	for i in range(len(RightText)):
+		data = data.append({'ID': data['ID'][i], 'Patient Age': data['Patient Age'][i], 'Patient Sex': data['Patient Sex'][i], 'filename': rf[i], 'label': RightText[i]}, ignore_index=True)
 
+	for i in range(len(data['ID'])):
+		print(data['ID'][i])
+	data.to_csv('full_prepro.csv', mode='a', header=key_columns, index=False, encoding='utf-8')
+
+def getDiagnostic(text, diagnostic_keyphrases):
+	diagnostics = re.split('， *|, *', text)
+	
+	l = []
+	dic = {}
+	for d in diagnostics:
+		for key, values in diagnostic_keyphrases.items():
+			if d in values and not key in l:
+				l.append(key)
+	return l
+
+def generateCSV(data_path, csv_name, discardNoLabels = False, discardMoreOneLabel = False, filters = [], diagnostic_keyphrases = diagnostic_keyphrases):
+	filetarget = "../data/ODIR-5K/csv/"
+	if not os.path.exists(filetarget):
+		os.makedirs(filetarget)
+	data = pd.read_excel(data_path)
+	
+	new_data = []
+	for i, row in data.iterrows():
+		new_row = [row['Patient Age'], row['Patient Sex'], row['Left-Fundus']]
+		labels = getDiagnostic(row['Left-Diagnostic Keywords'], diagnostic_keyphrases)
+		new_row.append(labels)
+		if (not discardNoLabels or len(labels) > 0) and (not discardMoreOneLabel or len(labels) <= 1):
+			if len(filters) == 0:
+				new_data.append(new_row)
+			else:
+				for f in filters:
+					if f in labels:
+						new_data.append(new_row)
+						break
+			
+		new_row = [row['Patient Age'], row['Patient Sex'], row['Right-Fundus']]
+		labels = getDiagnostic(row['Right-Diagnostic Keywords'], diagnostic_keyphrases)
+		new_row.append(labels)
+		if (not discardNoLabels or len(labels) > 0) and (not discardMoreOneLabel or len(labels) <= 1):
+			if len(filters) == 0:
+				new_data.append(new_row)
+			else:
+				for f in filters:
+					if f in labels:
+						new_data.append(new_row)
+						break
+	
+	key_columns = ['Patient Age','Patient Sex', 'Image', 'Label'] 
+
+	df = pd.DataFrame(new_data)
+	df.to_csv(filetarget+csv_name, header=key_columns, index=False, encoding='utf-8')
 
 def createPreprocessingFile(filepath, filetarget, prepro):
 	'''
@@ -217,14 +208,12 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 	filetarger : chemin vers le dossier où écrire les images (si inexistant il sera créé)
 	prepro : fonction à appliquer au images
 	'''
-
+	
 	print("Start Prepro Writing")
 	filename = [f for f in listdir(filepath) if isfile(join(filepath, f))]
-
 	#vérifie si le fichier target existe si non le crée
 	if not os.path.exists(filetarget):
 		os.makedirs(filetarget)
-
 	for img in filename:
 		path = os.path.join(filepath,img)
 		image = Image.open(path)
@@ -233,13 +222,22 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 		image = resize(image)
 		path = os.path.join(filetarget,img)
 		image.save(os.path.abspath(path))
-
 	print("End Prepro Writing")
 
 
 if __name__=="__main__":
-	filepath = "../data/ODIR-5K/ODIR-5K/Training Images/"
-	filetarget = "../data/ODIR-5K/ODIR-5K/preprocess_graham"
-	createPreprocessingFile(filepath, filetarget, graham)
+	#Le code ci-dessous devrait vous générer une série de csv et/ou dataset preprocessé
+	data_path = "../data/ODIR-5K/ODIR-5K/data.xlsx"
+	filetarget = "../data/ODIR-5K/csv/" #ne pas modifier le dossier sera créé automatiquement
+	if not os.path.exists(filetarget + "full_prepro.csv"):
+		generateCSV(data_path, "full_prepro.csv", discardNoLabels = True, discardMoreOneLabel = True)
+	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
+		generateCSV(data_path, "normale_vs_diabetic.csv", discardNoLabels = True, discardMoreOneLabel = True, filters = [0,1])
+	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
+		generateCSV(data_path, "normale_vs_malade.csv", discardNoLabels = True, discardMoreOneLabel = True, diagnostic_keyphrases = diagnostic_normale_or_not)
 
-	
+	#potentiellement changer filepaht, vous pouvez laisser filetarget
+	filepath =  "../data/ODIR-5K/ODIR-5K/Training Images"
+	filetarget = "../data/ODIR-5K/ODIR-5K/preprocess_graham"
+	if os.path.getsize(filetarget) == 0:
+		createPreprocessingFile(filepath, filetarget, graham)

@@ -24,7 +24,6 @@ class odr_data_loader(BaseDataLoader):
 		#self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
 		self.batch_size = batch_size
 		
-
 		trsfm  = transforms.Compose([
 			transforms.Resize(256),
 			transforms.CenterCrop(224),
@@ -50,6 +49,7 @@ class odr_data_loader(BaseDataLoader):
 		filename_list = data['filename'].to_numpy()
 		labels_list = data['labels'].to_numpy()
 		size = len(labels_list)
+		print("inital dataset size :", size)
 
 		#On transforme les labels en chiffres
 		labels_unique = np.unique(labels_list).tolist()
@@ -87,9 +87,10 @@ class odr_data_loader(BaseDataLoader):
 		#valid_sampler = SubsetRandomSampler(valid_idx)
 		train_sampler, valid_sampler = train_idx, valid_idx
 			
-		print("train size:", len(train_idx),"-- validation size:", len(valid_idx) )
+		print("train size:", len(train_idx),"-- validation size:", len(valid_idx), "-- total size dataset:", len(train_idx)+len(valid_idx))
 		self.countNbElementByClasses(labels[train_idx], msg= "[TRAIN SET]")
 		self.countNbElementByClasses(labels[valid_idx], msg= "[VALIDATION SET]")
+
 
 		return train_sampler, valid_sampler
 

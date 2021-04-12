@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 from itertools import repeat
 from collections import OrderedDict
+from datetime import datetime
 
 
 def ensure_dir(dirname):
@@ -45,6 +46,22 @@ def prepare_device(n_gpu_use):
 
 
     return device, list_ids
+
+def save_metrics_values(values, model_description, filename = None):
+    if filename == None:
+        d = datetime.now()
+        filename = d.strftime('%Y-%m-%d-%H-%M-%S')
+    print("Save metrics evolution througth epochs \n Start writing")
+    fichier = open("../saved/metrics_values/"+filename, "a")
+    fichier.write(model_description + "\n")
+    for value in values:
+        for v in value:
+            fichier.write(v + ";")
+        fichier.write("\n")
+    fichier.close()
+    print("Metrics values save on '../saved/metrics_values/'"+filename)
+    print("End writing")
+
 
 class MetricTracker:
     def __init__(self, *keys, writer=None):
