@@ -21,7 +21,7 @@ class odr_data_loader(BaseDataLoader):
 		self.validation_split = validation_split
 		self.shuffle = shuffle
 		self.equal_dist = equal_dist
-		self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
+		#self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
 		self.batch_size = batch_size
 		
 
@@ -42,6 +42,7 @@ class odr_data_loader(BaseDataLoader):
 			print("nb classes" , i , " : ", np.count_nonzero(labels == i))
 		
 	def _split_sampler(self, split):
+		print("LE BON SPLIT")
 		if split == 0.0:
 			return None, None
 		#On extrait les labels et le filename de notre dataset
@@ -97,4 +98,5 @@ class odr_data_loader(BaseDataLoader):
 		if self.valid_sampler is None:
 			return None
 		else:
+			print("ICI")
 			return DataLoader(sampler=self.valid_sampler, **self.init_kwargs)
