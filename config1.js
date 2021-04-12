@@ -19,14 +19,14 @@
         }
     },
     "optimizer": {
-        "type": "SGD",
+        "type": "Adam",
         "args":{
             "lr": 0.01,
             "weight_decay": 0,
-            "momentum": 0.9
+            "amsgrad": true
         }
     },
-    "loss": "cross_entropy_loss",
+    "loss": "nll_loss",
     "metrics": [
         "accuracy", "top_k_acc"
     ],

@@ -27,6 +27,8 @@ class BaseDataLoader(DataLoader):
 		super().__init__(sampler=self.sampler, **self.init_kwargs)
 
 	def _split_sampler(self, split):
+		print("RANDOM NULLE DANS BaseDataLoader(DataLoader) CALL RAMDANE FOR HELP BRO")
+		exit(0) # SI CA EXITE 
 		if split == 0.0:
 			return None, None
 

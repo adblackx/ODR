@@ -1,3 +1,4 @@
+  
 import torch
 import glob
 import os
@@ -12,18 +13,15 @@ class Dataset(torch.utils.data.Dataset):
         'Initialization'
 
         """
-
         to_drop = ['ID', 'Patient Age', 'Patient Sex', 'Left-Fundus', 'Right-Fundus',
            'Left-Diagnostic Keywords', 'Right-Diagnostic Keywords', 'N', 'D', 'G',
            'C', 'A', 'H', 'M', 'O', 'filepath', 'target']
-
         data = data.drop(columns = to_drop)
-
         """
 
         data = pd.read_csv('data/full_df.csv')
 
-        my_dir = data_dir+'preprocessed_images/'
+        my_dir = data_dir+'preprocessed_images/' # à changer cette immonde hardcode mdrrrr
         print(my_dir)
         my_list = glob.glob(os.path.join(my_dir,'*.jpg'))
 
@@ -45,13 +43,10 @@ class Dataset(torch.utils.data.Dataset):
         print("ICI")
         # Select sample
         ID = self.list_IDs[index]
-
         # Load data and get label
         X = torch.load('data/preprocessed_images/' + ID)
         y = self.labels[ID]
-
         return X, y
-
         """
         ID = self.list_IDs[index]
         img_path = 'data/preprocessed_images/' + ID

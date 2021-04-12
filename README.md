@@ -3,7 +3,7 @@ Ocular Disease Recognition
 
 s'execute avec : 
 
-python train.py -c config.json
+python main.py -c config.json
 
 L'éxecution ne marche pas pour le moment.
 
