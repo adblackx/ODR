@@ -6,7 +6,7 @@ import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
 from parse_config import ConfigParser
-from trainer.trainer_ram import Trainer
+from trainer.trainer_ram1 import Trainer
 from utils.util import prepare_device
 from data_loader.data_loaders import odr_data_loader
 import data_loader.data_loaders as module_data
@@ -29,6 +29,9 @@ np.random.seed(SEED)
 
 def main(config):
     print("DEBUT DU PROGRAMME")
+
+    logger = config.get_logger('train') # Pour tensorBoard
+
 
     '''data_loader = config.init_obj('data_loader', module_data)
 
@@ -69,7 +72,9 @@ def main(config):
 
     
     model = models.alexnet(pretrained=True).to(device)
-    model.train()
+    #model.train()
+
+    logger.info(model)
 
 
 
