@@ -7,6 +7,11 @@ python main.py -c config.json
 
 L'éxecution ne marche pas pour le moment.
 
+Nouveauté, TensorBoard ,l'installer avant bien évidemment, copier/coller le lien dans le navigateur :
+
+tensorboard --logdir saved/log/
+
+
 Pour tester 
 
 Pour les dossiers:

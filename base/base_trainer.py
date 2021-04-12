@@ -1,7 +1,7 @@
 import torch
 from abc import abstractmethod
 from numpy import inf
-#from logger import TensorboardWriter
+from logger.visualization import TensorboardWriter
 
 
 class BaseTrainer:
@@ -10,7 +10,7 @@ class BaseTrainer:
 	"""
 	def __init__(self, model, criterion, metric_ftns, optimizer, config):
 		self.config = config
-		#self.logger = config.get_logger('trainer', config['trainer']['verbosity']) # on retire
+		self.logger = config.get_logger('trainer', config['trainer']['verbosity'])
 
 		self.model = model
 		self.criterion = criterion
@@ -40,7 +40,7 @@ class BaseTrainer:
 		self.checkpoint_dir = config.save_dir
 
 		# setup visualization writer instance                
-		#self.writer = TensorboardWriter(config.log_dir, self.logger, cfg_trainer['tensorboard']) #on retire
+		self.writer = TensorboardWriter(config.log_dir, self.logger, cfg_trainer['tensorboard'])
 
 		if config.resume is not None:
 			self._resume_checkpoint(config.resume)
@@ -49,7 +49,6 @@ class BaseTrainer:
 	def _train_epoch(self, epoch):
 		"""
 		Training logic for an epoch
-
 		:param epoch: Current epoch number
 		"""
 		raise NotImplementedError
@@ -67,24 +66,19 @@ class BaseTrainer:
 			log.update(result)
 
 			# print logged informations to the screen
-			"""for key, value in log.items():
-				self.logger.info('    {:15s}: {}'.format(str(key), value))
-			"""
-			# evaluate model performance according to configured metric, save best checkpoint as model_best
 			for key, value in log.items():
-				print(' {:15s}: {}'.format(str(key), value))
+				self.logger.info('    {:15s}: {}'.format(str(key), value))
+
+			# evaluate model performance according to configured metric, save best checkpoint as model_best
 			best = False
 			if self.mnt_mode != 'off':
 				try:
-				    # check whether model performance improved or not, according to specified metric(mnt_metric)
+					# check whether model performance improved or not, according to specified metric(mnt_metric)
 					improved = (self.mnt_mode == 'min' and log[self.mnt_metric] <= self.mnt_best) or \
-					           (self.mnt_mode == 'max' and log[self.mnt_metric] >= self.mnt_best)
+							   (self.mnt_mode == 'max' and log[self.mnt_metric] >= self.mnt_best)
 				except KeyError:
-					"""self.logger.warning("Warning: Metric '{}' is not found. "
-					                    "Model performance monitoring is disabled.".format(self.mnt_metric))
-					"""
-					pritn("Warning: Metric '{}' is not found. "
-					                    "Model performance monitoring is disabled.".format(self.mnt_metric))
+					self.logger.warning("Warning: Metric '{}' is not found. "
+										"Model performance monitoring is disabled.".format(self.mnt_metric))
 					self.mnt_mode = 'off'
 					improved = False
 
@@ -96,21 +90,16 @@ class BaseTrainer:
 					not_improved_count += 1
 
 				if not_improved_count > self.early_stop:
-					"""
 					self.logger.info("Validation performance didn\'t improve for {} epochs. "
-					                 "Training stops.".format(self.early_stop))
-					"""
-					print("Validation performance didn\'t improve for {} epochs. "
-					                 "Training stops.".format(self.early_stop))
+									 "Training stops.".format(self.early_stop))
 					break
-				
+
 			if epoch % self.save_period == 0:
 				self._save_checkpoint(epoch, save_best=best)
 
 	def _save_checkpoint(self, epoch, save_best=False):
 		"""
 		Saving checkpoints
-
 		:param epoch: current epoch number
 		:param log: logging information of the epoch
 		:param save_best: if True, rename the saved checkpoint to 'model_best.pth'
@@ -126,18 +115,15 @@ class BaseTrainer:
 		}
 		filename = str(self.checkpoint_dir / 'checkpoint-epoch{}.pth'.format(epoch))
 		torch.save(state, filename)
-		#self.logger.info("Saving checkpoint: {} ...".format(filename))
-		print("Saving checkpoint: {} ...".format(filename))
+		self.logger.info("Saving checkpoint: {} ...".format(filename))
 		if save_best:
 			best_path = str(self.checkpoint_dir / 'model_best.pth')
 			torch.save(state, best_path)
-			#self.logger.info("Saving current best: model_best.pth ...")
-			print("Saving current best: model_best.pth ...")
+			self.logger.info("Saving current best: model_best.pth ...")
 
 	def _resume_checkpoint(self, resume_path):
 		"""
 		Resume from saved checkpoints
-
 		:param resume_path: Checkpoint path to be resumed
 		"""
 		resume_path = str(resume_path)
@@ -148,24 +134,15 @@ class BaseTrainer:
 
 		# load architecture params from checkpoint.
 		if checkpoint['config']['arch'] != self.config['arch']:
-			"""
-		    self.logger.warning("Warning: Architecture configuration given in config file is different from that of "
-		                        "checkpoint. This may yield an exception while state_dict is being loaded.")
-			"""
-			print("Warning: Architecture configuration given in config file is different from that of "
-		                        "checkpoint. This may yield an exception while state_dict is being loaded.")
-
+			self.logger.warning("Warning: Architecture configuration given in config file is different from that of "
+								"checkpoint. This may yield an exception while state_dict is being loaded.")
 		self.model.load_state_dict(checkpoint['state_dict'])
 
 		# load optimizer state from checkpoint only when optimizer type is not changed.
 		if checkpoint['config']['optimizer']['type'] != self.config['optimizer']['type']:
-			"""self.logger.warning("Warning: Optimizer type given in config file is different from that of checkpoint. "
-	                            "Optimizer parameters not being resumed.")
-	        """
-			print("Warning: Optimizer type given in config file is different from that of checkpoint. "
-	                            "Optimizer parameters not being resumed.")
+			self.logger.warning("Warning: Optimizer type given in config file is different from that of checkpoint. "
+								"Optimizer parameters not being resumed.")
 		else:
 			self.optimizer.load_state_dict(checkpoint['optimizer'])
 
-		#self.logger.info("Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch))
-		print("Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch))
+		self.logger.info("Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch))
