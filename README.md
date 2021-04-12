@@ -7,9 +7,12 @@ python main.py -c config.json
 
 L'éxecution ne marche pas pour le moment.
 
-Nouveauté, TensorBoard ,l'installer avant bien évidemment, copier/coller le lien dans le navigateur :
+Petite nouveauté, pour que ça marche il faut installer tensorboard avec pip install tensorflow .
+IEnsuite, il faut exécuter python main.py -c config.json ,  puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
 
 tensorboard --logdir saved/log/
+
+Copier coller le lien dans un navigateur, et suivre l'évolution en direct
 
 
 Pour tester 
