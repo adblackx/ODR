@@ -14,7 +14,8 @@
             "data_dir": "data/full_df.csv",
             "batch_size": 25,
             "shuffle": true,
-            "validation_split": 0.3,
+            "equal_dist":true,
+            "validation_split": 0.1,
             "num_workers": 2
         }
     },
@@ -43,7 +44,6 @@
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
-        
         "monitor": "min val_loss",
         "early_stop": 10,
 
