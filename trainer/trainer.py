@@ -30,6 +30,10 @@ class Trainer(BaseTrainer):
 		self.train_metrics = MetricTracker('loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer)
 		self.valid_metrics = MetricTracker('loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer)
 
+		self.file_metrics = str(self.checkpoint_dir / 'metrics.csv')
+		
+
+
 	def _train_epoch(self, epoch):
 		"""
 		Training logic for an epoch
@@ -68,6 +72,7 @@ class Trainer(BaseTrainer):
 			val_log = self._valid_epoch(epoch)
 			log.update(**{'val_'+k : v for k, v in val_log.items()})
 
+
 		if self.lr_scheduler is not None:
 			self.lr_scheduler.step()
 
@@ -77,6 +82,8 @@ class Trainer(BaseTrainer):
 
 		self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
 		self.writer.add_scalar('Loss',  loss)
+
+		self._save_csv(epoch, log)
 
 		return log
 
@@ -109,7 +116,7 @@ class Trainer(BaseTrainer):
 		loss = self.criterion(output, target)
 		self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
 		self.writer.add_scalar('Loss',  loss)
-	
+
 		return self.valid_metrics.result()
 
 	def _progress(self, batch_idx):
@@ -121,3 +128,25 @@ class Trainer(BaseTrainer):
 			current = batch_idx
 			total = self.len_epoch
 		return base.format(current, total, 100.0 * current / total)
+
+
+	def _save_csv(self, epoch ,log):
+		"""
+			Saving checkpoints
+			:param epoch: current epoch number
+			:param log: logging information of the epoch
+		"""
+
+		fichier = open(self.file_metrics, "a")
+
+		if epoch == 1:
+			fichier.write("epoch,")
+			for key in log:
+				fichier.write(str(key) +",")
+			fichier.write("\n")
+
+		fichier.write(str(epoch) +",")
+		for key in log:
+			fichier.write(str(log[key]) + ",")
+		fichier.write("\n")
+		fichier.close()
