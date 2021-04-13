@@ -29,7 +29,7 @@ class Plot():
 
 
 if __name__ == '__main__':
-	# exemple
+	# exemple  python plot.py saved/models/Garaham/0413_013727/metrics.csv
     print("Hello, world!")
     filepath = sys.argv[1]
     #os.chdir("..")
