@@ -86,7 +86,7 @@ class odr_data_loader(BaseDataLoader):
 		#normalement on peut s'en passer ?
 		#train_sampler = SubsetRandomSampler(train_idx)
 		#valid_sampler = SubsetRandomSampler(valid_idx)
-		train_sampler, valid_sampler = train_idx[], valid_idx[]
+		train_sampler, valid_sampler = train_idx, valid_idx
 			
 		print("train size:", len(train_idx),"-- validation size:", len(valid_idx), "-- total size dataset:", len(train_idx)+len(valid_idx))
 		self.countNbElementByClasses(labels[train_idx], msg= "[TRAIN SET]")

@@ -1,7 +1,7 @@
 {
     "name": "Garaham", 
     "n_gpu": 1,
-    "data_dir": "data/full_df.csv",
+    "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
 
     "arch": {
         "type": "Odr_model",
@@ -11,9 +11,10 @@
     "data_loader": {
         "type": "odr_data_loader", 
         "args":{
-            "data_dir": "data/full_df.csv",
-            "batch_size": 25,
-            "shuffle": true,
+            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
+            "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
+            "batch_size": 5,
+            "shuffle": false,
             "equal_dist":true,
             "validation_split": 0.1,
             "num_workers": 2
@@ -22,7 +23,7 @@
     "optimizer": {
         "type": "SGD",
         "args":{
-            "lr": 0.001,
+            "lr": 0.0001,
             "weight_decay": 0,
             "momentum": 0.9
         }
@@ -39,13 +40,13 @@
         }
     },
     "trainer": {
-        "epochs": 80,
+        "epochs": 150,
 
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,
         "monitor": "min val_loss",
-        "early_stop": 10,
+        "early_stop": 50,
 
         "tensorboard": true
     }
