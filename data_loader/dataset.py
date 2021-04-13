@@ -9,7 +9,7 @@ import numpy as np
 
 class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
-    def __init__(self, data_dir,transform):
+    def __init__(self, data_dir, image_dir, transform):
         'Initialization'
 
         """
@@ -18,12 +18,8 @@ class Dataset(torch.utils.data.Dataset):
            'C', 'A', 'H', 'M', 'O', 'filepath', 'target']
         data = data.drop(columns = to_drop)
         """
-
-        data = pd.read_csv('data/full_df.csv')
-
-        my_dir = data_dir+'preprocessed_images/' # à changer cette immonde hardcode mdrrrr
-        print(my_dir)
-        my_list = glob.glob(os.path.join(my_dir,'*.jpg'))
+        self.image_dir = image_dir
+        data = pd.read_csv(data_dir)
 
         filename_list = data['filename'].to_numpy()
         labels_list = data['labels'].to_numpy()
@@ -31,6 +27,7 @@ class Dataset(torch.utils.data.Dataset):
         self.labels = labels_list
         self.list_IDs = filename_list
         self.transform = transform
+
         print(self.list_IDs[1:10])
 
     def __len__(self):
@@ -49,13 +46,14 @@ class Dataset(torch.utils.data.Dataset):
         return X, y
         """
         ID = self.list_IDs[index]
-        img_path = 'data/preprocessed_images/' + ID
+        img_path = self.image_dir + ID
         img = Image.open(img_path)
         img_transformed = self.transform(img)
 
         labels_unique = np.unique(self.labels)
         label = self.labels[index]
-        label = np.where(labels_unique == label)[0][0]
+        label = int(label[1])
+        #label = np.where(labels_unique == label)[0][0]
         #print(self.label_list[idx], label)
 
         return img_transformed, label
