@@ -21,8 +21,8 @@ class Dataset(torch.utils.data.Dataset):
         self.image_dir = image_dir
         data = pd.read_csv(data_dir)
 
-        filename_list = data['filename'].to_numpy()
-        labels_list = data['labels'].to_numpy()
+        filename_list = data['Image'].to_numpy()
+        labels_list = data['Label'].to_numpy()
 
         self.labels = labels_list
         self.list_IDs = filename_list

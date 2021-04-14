@@ -46,9 +46,8 @@ class odr_data_loader(BaseDataLoader):
 		if split == 0.0:
 			return None, None
 		#On extrait les labels et le filename de notre dataset
-		data = pd.read_csv(self.data_dir)
-		filename_list = data['filename'].to_numpy()
-		labels_list = data['labels'].to_numpy()
+		
+		labels_list = self.dataset.labels
 		size = len(labels_list)
 		print("inital dataset size :", size)
 

@@ -21,14 +21,19 @@ import torch.nn.functional as F
 # python load.py -c config.json
 
 # fix random seeds for reproducibility
-SEED = 123
-torch.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-np.random.seed(SEED)
 
 def main(config):
     print("DEBUT DU PROGRAMME")
+
+    SEED = 123
+    torch.manual_seed(SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(SEED)
+
+    device, device_ids = prepare_device(config['n_gpu'])
+
+
 
     logger = config.get_logger('train') # Pour tensorBoard
 
@@ -59,22 +64,16 @@ def main(config):
 
     #------------------CODE A METTRE DANS TRAINER-------------------
 
-
-
-    # PARTIE OK DEBUT
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(device)
-    
-    torch.manual_seed(1234)
-    if device =='cuda':
-        torch.cuda.manual_seed_all(1234)
-
     
     model = models.alexnet(pretrained=True).to(device)
+    #model = config.init_obj('arch', module_arch)
+
     #model.train()
 
     logger.info(model)
+
+    if len(device_ids) > 1:
+        model = torch.nn.DataParallel(model, device_ids=device_ids)
 
 
 
