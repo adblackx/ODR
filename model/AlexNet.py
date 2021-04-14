@@ -29,6 +29,6 @@ class AlexNet():
 		self.set_parameter_requires_grad(model_ft, self.feature_extract)
 		num_ftrs = model_ft.classifier[6].in_features
 		model_ft.classifier[6] = nn.Linear(num_ftrs,self.num_classes)
-		input_size = 224
+		#input_size = 224
 
-		return model_ft, input_size
+		return model_ft #, input_size

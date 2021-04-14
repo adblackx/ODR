@@ -8,12 +8,22 @@
         "args": {}
     },
 
+    "model": {
+        "type": "AlexNet",
+        "args": {
+            "num_classes": 8,
+            "feature_extract": true,
+            "use_pretrained": true        
+        }
+    },
+
+
     "data_loader": {
         "type": "odr_data_loader", 
         "args":{
             "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 5,
+            "batch_size": 128,
             "shuffle": false,
             "equal_dist":true,
             "validation_split": 0.1,

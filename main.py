@@ -5,6 +5,7 @@ import numpy as np
 import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
+import model.AlexNet as alex
 from parse_config import ConfigParser
 from trainer.trainer import Trainer
 from utils.util import prepare_device
@@ -65,9 +66,10 @@ def main(config):
     #------------------CODE A METTRE DANS TRAINER-------------------
 
     
-    model = models.alexnet(pretrained=True).to(device)
-    #model = config.init_obj('arch', module_arch)
-
+    #model = models.alexnet(pretrained=True).to(device)
+    model = config.init_obj('model', alex)
+    model = model.getModel()
+    model = model.to(device)
     #model.train()
 
     logger.info(model)
