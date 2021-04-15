@@ -233,9 +233,12 @@ if __name__=="__main__":
 	#Le code ci-dessous devrait vous générer une série de csv et/ou dataset preprocessé
 	data_path = "../data/ODIR-5K/ODIR-5K/data.xlsx"
 	filetarget = "../data/ODIR-5K/csv/" #ne pas modifier le dossier sera créé automatiquement
-	generateCSV(data_path, "full_prepro.csv")
-	generateCSV(data_path, "normale_vs_diabetic.csv", filters = [0,1])
-	generateCSV(data_path, "normale_vs_malade.csv", diagnostic_keyphrases = diagnostic_normale_or_not)
+	if not os.path.exists(filetarget + "full_prepro.csv"):
+		generateCSV(data_path, "full_prepro.csv")
+	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
+		generateCSV(data_path, "normale_vs_diabetic.csv", filters = [0,1])
+	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
+		generateCSV(data_path, "normale_vs_malade.csv", diagnostic_keyphrases = diagnostic_normale_or_not)
 
 	#potentiellement changer filepaht, vous pouvez laisser filetarget
 	filepath =  "../data/ODIR-5K/ODIR-5K/Training Images"
