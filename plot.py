@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 import data_loader.data_loaders as module_data
 from utils.util import prepare_device
+import model.model_mult as model_mult
 
 import argparse
 import collections
@@ -170,7 +171,7 @@ def afficher(config):
 	PATH = config['model_path']
 	print(PATH)
 
-	model = config.init_obj('model', alex)
+	model = config.init_obj('model', model_mult)
 	model = model.getModel()
 
 	if len(device_ids) > 1:
