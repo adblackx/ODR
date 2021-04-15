@@ -3,7 +3,7 @@
     "n_gpu": 1,
 
     "model_path": "saved/models/Garaham/0414_220524/checkpoint-epoch20.pth",
-    "affiche": "saved/models/Garaham/0415_130945/metrics.csv",
+    "affiche": "saved/models/Garaham/0415_154950/metrics.csv",
 
 
    "model": {
