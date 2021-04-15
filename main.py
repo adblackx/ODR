@@ -5,12 +5,11 @@ import numpy as np
 import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
-import model.AlexNet as alex
+import model.model_mult as model_mult
 from parse_config import ConfigParser
 from trainer.trainer import Trainer
 from utils.util import prepare_device
-from data_loader.data_loaders import odr_data_loader
-import data_loader.data_loaders as module_data
+import data_loader.data_loaders as module_data1
 
 from torchvision import datasets, models, transforms, utils
 from torch.utils.data import DataLoader, Dataset
@@ -26,51 +25,36 @@ import torch.nn.functional as F
 def main(config):
     print("DEBUT DU PROGRAMME")
 
-    SEED = 123
+    SEED = 1234
     torch.manual_seed(SEED)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
     np.random.seed(SEED)
+    
 
     device, device_ids = prepare_device(config['n_gpu'])
 
 
-
+    #Ce code marche et oui hahaha
     logger = config.get_logger('train') # Pour tensorBoard
+    train_loader = config.init_obj('data_loader', module_data1)
 
-
-    '''data_loader = config.init_obj('data_loader', module_data)
-
-    valid_data_loader = data_loader.split_validation()'''
+    valid_data_loader = train_loader.split_validation()
     
-    #mes modifs
 
-    #-----------------CODE A METTRE DANS data loader et base-------------------
-    data_dir= config['data_dir']
-
-    #x_train, y_train, x_test, y_test = splitTrainTest(data_dir)
-
-    data_loader = config.init_obj('data_loader', module_data)
-    valid_data_loader = data_loader.split_validation()
-
-
-    #train_loader = odr_data_loader(data_dir, x_train, y_train, 100, True, 0, 2)
-    #valid_data_loader = odr_data_loader(data_dir, x_test, y_test, 100, True, 0, 2)
-    #-------------------------------------
-
-    
-    #fin modifs
-    #train_loader = odr_data_loader(**args)
-
-
-    #------------------CODE A METTRE DANS TRAINER-------------------
 
     
     #model = models.alexnet(pretrained=True).to(device)
-    model = config.init_obj('model', alex)
+    model = config.init_obj('model', model_mult)
     model = model.getModel()
     model = model.to(device)
-    #model.train()
+    model.train() # deja fait dans trainer
+
+    #model = models.resnet18(pretrained=True)
+    #model = models.alexnet(pretrained=True)
+    #print(model)
+    #model.fc = nn.Linear(512, 2)
+    #model = model.to(device)
 
     logger.info(model)
 
@@ -92,7 +76,7 @@ def main(config):
     trainer = Trainer(model, criterion, metrics, optimizer,
                       config=config,
                       device=device,
-                      data_loader=data_loader,
+                      data_loader=train_loader,
                       valid_data_loader=valid_data_loader,
                       lr_scheduler=lr_scheduler)
 

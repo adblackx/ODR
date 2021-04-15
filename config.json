@@ -9,38 +9,38 @@
     },
 
     "model": {
-        "type": "AlexNet",
+        "type": "Model_Mult",
         "args": {
-            "num_classes": 8,
-            "feature_extract": true,
-            "use_pretrained": true        
+            "num_classes": 2,
+            "feature_extract": false,
+            "use_pretrained": true,
+            "model_name": "resnet"        
         }
     },
-
 
     "data_loader": {
         "type": "odr_data_loader", 
         "args":{
-            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
+            "data_dir": "data/ODIR-5K/csv/normale_vs_diabetic.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 128,
+            "batch_size": 100,
             "shuffle": false,
             "equal_dist":true,
-            "validation_split": 0.1,
+            "validation_split": 0.05,
             "num_workers": 2
         }
     },
     "optimizer": {
         "type": "SGD",
         "args":{
-            "lr": 0.0001,
+            "lr": 0.001,
             "weight_decay": 0,
             "momentum": 0.9
         }
     },
     "loss": "cross_entropy_loss",
     "metrics": [
-        "accuracy", "top_k_acc"
+        "accuracy"
     ],
     "lr_scheduler": {
         "type": "StepLR",
