@@ -1,0 +1,41 @@
+{
+    "name": "Plot", 
+    "n_gpu": 1,
+
+    "model_path": "saved/models/Garaham/0414_220524/checkpoint-epoch20.pth",
+    "affiche": "saved/models/Garaham/0415_130945/metrics.csv",
+
+
+   "model": {
+        "type": "AlexNet",
+        "args": {
+            "num_classes": 8,
+            "feature_extract": true,
+            "use_pretrained": true        
+        }
+    },
+    "data_loader": {
+        "type": "odr_data_loader", 
+        "args":{
+            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
+            "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
+            "batch_size": 512,
+            "shuffle": false,
+            "equal_dist":true,
+            "validation_split": 0.1,
+            "num_workers": 2
+        }
+    },
+    "trainer": {
+        "epochs": 10,
+
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 50,
+
+        "tensorboard": true
+    }
+
+}

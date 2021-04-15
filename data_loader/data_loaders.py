@@ -6,9 +6,10 @@ import numpy as np
 from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.data import DataLoader
 import pandas as pd
+from torch.utils.data.sampler import SubsetRandomSampler
 
 
-class odr_data_loader(BaseDataLoader):
+class odr_data_loader(DataLoader):
 	"""
 	MNIST data loading demo using BaseDataLoader
 	"""
@@ -21,7 +22,7 @@ class odr_data_loader(BaseDataLoader):
 		self.validation_split = validation_split
 		self.shuffle = shuffle
 		self.equal_dist = equal_dist
-		#self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
+		
 		self.batch_size = batch_size
 		self.image_dir = image_dir
 		
@@ -33,7 +34,17 @@ class odr_data_loader(BaseDataLoader):
 		])
 
 		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm)
-		super().__init__(self.dataset, self.batch_size, False, self.validation_split, num_workers)
+		self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
+
+		self.init_kwargs = {
+			'dataset': self.dataset,
+			'batch_size': batch_size,
+			'shuffle': self.shuffle,
+			'collate_fn': collate_fn,
+			'num_workers': num_workers
+		}
+
+		super().__init__(sampler=self.sampler, **self.init_kwargs)
 
 	def countNbElementByClasses(self, labels, msg = ""):
 		labels = np.array(labels)
@@ -46,6 +57,8 @@ class odr_data_loader(BaseDataLoader):
 		if split == 0.0:
 			return None, None
 		#On extrait les labels et le filename de notre dataset
+
+		print("SPLIT:", split)
 		
 		labels_list = self.dataset.labels
 		size = len(labels_list)
@@ -57,7 +70,7 @@ class odr_data_loader(BaseDataLoader):
 		for i in labels_list:
 			labels.append(labels_unique.index(i))
 		labels = np.array(labels)
-		
+
 		#on construit un tableau d'index qu'on mélange si demandé
 		idx_full = np.arange(size)
 		if(self.shuffle):
@@ -83,21 +96,22 @@ class odr_data_loader(BaseDataLoader):
 		train_idx = np.delete(idx_full, valid_idx)
 
 		#normalement on peut s'en passer ?
-		#train_sampler = SubsetRandomSampler(train_idx)
-		#valid_sampler = SubsetRandomSampler(valid_idx)
-		train_sampler, valid_sampler = train_idx, valid_idx
+		train_sampler = SubsetRandomSampler(train_idx)
+		valid_sampler = SubsetRandomSampler(valid_idx)
+		#train_sampler, valid_sampler = train_idx, valid_idx
 			
 		print("train size:", len(train_idx),"-- validation size:", len(valid_idx), "-- total size dataset:", len(train_idx)+len(valid_idx))
 		self.countNbElementByClasses(labels[train_idx], msg= "[TRAIN SET]")
 		self.countNbElementByClasses(labels[valid_idx], msg= "[VALIDATION SET]")
-
+		print(train_sampler)
+		
 
 		return train_sampler, valid_sampler
+		
 
 	def split_validation(self): 
 	# on va appeler cette fonction pour récupérer le valid_sampler appele dans le constructeur de cette classe de la fonction précédente
 		if self.valid_sampler is None:
 			return None
 		else:
-			print("ICI")
 			return DataLoader(sampler=self.valid_sampler, **self.init_kwargs)

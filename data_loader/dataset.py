@@ -28,7 +28,7 @@ class Dataset(torch.utils.data.Dataset):
         self.list_IDs = filename_list
         self.transform = transform
 
-        print(self.list_IDs[1:10])
+        #print(self.list_IDs[1:10])
 
     def __len__(self):
         'Denotes the total number of samples'
@@ -52,8 +52,12 @@ class Dataset(torch.utils.data.Dataset):
 
         labels_unique = np.unique(self.labels)
         label = self.labels[index]
-        label = int(label[1])
+        label = np.where(labels_unique == label)[0][0]
+
         #label = np.where(labels_unique == label)[0][0]
         #print(self.label_list[idx], label)
 
         return img_transformed, label
+
+    def getItem(self, index):
+        return self.__getitem__(index)
