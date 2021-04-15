@@ -232,3 +232,4 @@ if __name__=="__main__":
 	generateCSV(data_path, "full_prepro.csv", discardNoLabels = True, discardMoreOneLabel = True)
 	generateCSV(data_path, "normale_vs_diabetic.csv", discardNoLabels = True, discardMoreOneLabel = True, filters = [0,1])
 	generateCSV(data_path, "normale_vs_malade.csv", discardNoLabels = True, discardMoreOneLabel = True, diagnostic_keyphrases = diagnostic_normale_or_not)
+		

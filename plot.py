@@ -9,13 +9,13 @@ import sys
 from pathlib import Path
 import data_loader.data_loaders as module_data
 from utils.util import prepare_device
+import model.model_mult as model_mult
 
 import argparse
 import collections
 from parse_config import ConfigParser
 from torchvision import  models
 
-import model.AlexNet as alex
 import matplotlib.pyplot as plt
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
@@ -154,6 +154,7 @@ def afficher(config):
 	# exemple  python plot.py saved/models/Garaham/0415_130945/metrics.csv
 	# exemple  python plot.py -c config_plot.json
 	
+	"""
 	print("Hello, world!")
 	aff = Plot(config['affiche'])
 	aff.printLoss()
@@ -170,7 +171,7 @@ def afficher(config):
 	PATH = config['model_path']
 	print(PATH)
 
-	model = config.init_obj('model', alex)
+	model = config.init_obj('model', model_mult)
 	model = model.getModel()
 
 	if len(device_ids) > 1:
@@ -205,7 +206,7 @@ def afficher(config):
 	preds_correct = get_num_correct(all_preds, train_label1)
 	print('total correct:', preds_correct,  'sur', len(train_label1) )
 	print('accuracy:', preds_correct / len(train_label1))
-	"""
+	
 
 
 

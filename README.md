@@ -5,6 +5,8 @@ s'execute avec :
 
 python main.py -c config.json
 
+python plot.py -c config_plot.json
+
 L'éxecution ne marche pas pour le moment.
 
 Petite nouveauté, pour que ça marche il faut installer tensorboard avec pip install tensorflow .

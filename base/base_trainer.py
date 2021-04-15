@@ -94,8 +94,10 @@ class BaseTrainer:
 									 "Training stops.".format(self.early_stop))
 					break
 
-			"""if epoch % self.save_period == 0:
-				self._save_checkpoint(epoch, save_best=best)"""
+			if epoch % self.save_period == 0 and epoch >= 10:
+				#self._save_checkpoint(epoch, save_best=best)
+				torch.save(self.model.state_dict(), filename)
+				self.logger.info("Saving checkpoint: {} ...".format(filename))
 
 	def _save_checkpoint(self, epoch, save_best=False):
 		"""
