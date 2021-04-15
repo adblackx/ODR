@@ -9,7 +9,7 @@ import numpy as np
 
 class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
-    def __init__(self, data_dir, image_dir, transform):
+    def __init__(self, data_dir, image_dir, transform,extended):
         'Initialization'
 
         """
@@ -19,13 +19,15 @@ class Dataset(torch.utils.data.Dataset):
         data = data.drop(columns = to_drop)
         """
         self.image_dir = image_dir
+        self.extended = extended
         data = pd.read_csv(data_dir)
 
-        filename_list = data['Image'].to_numpy()
-        labels_list = data['Label'].to_numpy()
 
-        self.labels = labels_list
-        self.list_IDs = filename_list
+        self.labels = data['Label'].to_numpy()
+        self.list_IDs = data['Image'].to_numpy()
+        self.age = data['Patient Age'].to_numpy()
+        self.sex = data['Patient Sex'].to_numpy()
+
         self.transform = transform
 
         #print(self.list_IDs[1:10])
@@ -45,6 +47,7 @@ class Dataset(torch.utils.data.Dataset):
         y = self.labels[ID]
         return X, y
         """
+
         ID = self.list_IDs[index]
         img_path = self.image_dir + ID
         img = Image.open(img_path)
@@ -54,10 +57,13 @@ class Dataset(torch.utils.data.Dataset):
         label = self.labels[index]
         label = np.where(labels_unique == label)[0][0]
 
-        #label = np.where(labels_unique == label)[0][0]
-        #print(self.label_list[idx], label)
+        if not self.extended:
+            return img_transformed, label
+        else:
+            age = self.labels[index]
 
-        return img_transformed, label
+            return img_transformed, label, age
+
 
     def getItem(self, index):
         return self.__getitem__(index)

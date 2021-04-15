@@ -13,7 +13,7 @@ class odr_data_loader(DataLoader):
 	"""
 	MNIST data loading demo using BaseDataLoader
 	"""
-	def __init__(self, data_dir, image_dir, batch_size, shuffle, equal_dist, validation_split, num_workers, collate_fn=default_collate):
+	def __init__(self, data_dir, image_dir, batch_size, shuffle, equal_dist, validation_split, num_workers,extended, collate_fn=default_collate):
 		"""trsfm = transforms.Compose([
 			transforms.ToTensor(),
 			transforms.Normalize((0.1307,), (0.3081,))
@@ -33,7 +33,7 @@ class odr_data_loader(DataLoader):
 			transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 		])
 
-		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm)
+		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm,extended)
 		self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
 
 		self.init_kwargs = {
