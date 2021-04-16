@@ -10,6 +10,7 @@ from pathlib import Path
 import data_loader.data_loaders as module_data
 from utils.util import prepare_device
 import model.model_mult as model_mult
+import model.mymodel as mymodel
 
 import argparse
 import collections
@@ -61,8 +62,8 @@ def get_all_preds(network, dataloader):
 	if dataloader.dataset.extended:
 		for batch in dataloader:
 			images, labels,data = batch
-			print(data.size())
-			print(data)
+			#print(data.size())
+			#print(data)
 			preds = model(images,data) # get preds
 			all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
 	else:
@@ -169,6 +170,10 @@ def afficher(config):
 	aff.printAccuracy()
 	"""
 
+	aff = Plot(config['affiche'])
+	aff.printLoss()
+	aff.printAccuracy()
+
 	#model = models.alexnet(pretrained=True)
 
 	device, device_ids = prepare_device(config['n_gpu'])
@@ -177,7 +182,9 @@ def afficher(config):
 	print(PATH)
 
 	model = config.init_obj('model', model_mult)
+
 	model = model.getModel()
+	print(model)
 
 	if len(device_ids) > 1:
 		model = torch.nn.DataParallel(model, device_ids=device_ids)
@@ -204,11 +211,8 @@ def afficher(config):
 
 
 	pred_data_loader = torch.utils.data.DataLoader(batch_size=10000, dataset=train_Label, num_workers=1)
-	all_preds= get_all_preds(network=model, dataloader=data_loader) 
+	all_preds= get_all_preds(network=model, dataloader=data_loader)
 
-
-
-	plot_confusion_matrix(cm=confusion_matrix(y_true=train_Label, y_pred=all_preds.argmax(1)), target_names=np.unique(train_Label), normalize=False)
 	train_label1 = torch.from_numpy(train_Label)
 	print(len(all_preds))
 	print(len(train_label1))
@@ -216,7 +220,12 @@ def afficher(config):
 	preds_correct = get_num_correct(all_preds, train_label1)
 	print('total correct:', preds_correct,  'sur', len(train_label1) )
 	print('accuracy:', preds_correct / len(train_label1))
-	
+	 
+
+
+
+	plot_confusion_matrix(cm=confusion_matrix(y_true=train_Label, y_pred=all_preds.argmax(1)), target_names=np.unique(train_Label), normalize=False)
+
 
 
 

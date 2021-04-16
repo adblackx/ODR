@@ -59,7 +59,7 @@ class Model_Mult():
 			""" Resnet18
 			"""
 			size_out = num_classes*100
-			model_cnn = self.initialize_model("resnet", size_out, feature_extract, use_pretrained)
+			model_cnn = self.initialize_model("alexnet", size_out, feature_extract, use_pretrained)
 			model_ft = MyModel(model_cnn,size_out,num_classes)
 
 
