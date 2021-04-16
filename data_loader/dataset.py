@@ -25,6 +25,7 @@ class Dataset(torch.utils.data.Dataset):
 
         self.labels = data['Label'].to_numpy()
         self.list_IDs = data['Image'].to_numpy()#+ ".jpg"
+        self.age = data['Patient Age'].to_numpy()
         print(self.labels)
         for i in range(len(self.labels)):
             self.labels[i] = int(self.labels[i][1])
