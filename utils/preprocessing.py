@@ -211,6 +211,8 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 	
 	print("Start Prepro Writing")
 	filename = [f for f in listdir(filepath) if isfile(join(filepath, f))]
+	nb_image = len(filename)
+	compteur = 0
 	#vérifie si le fichier target existe si non le crée
 	if not os.path.exists(filetarget):
 		os.makedirs(filetarget)
@@ -241,6 +243,12 @@ if __name__=="__main__":
 		generateCSV(data_path, "normale_vs_malade.csv", diagnostic_keyphrases = diagnostic_normale_or_not)
 
 	#potentiellement changer filepaht, vous pouvez laisser filetarget
+	
 	filepath =  "../data/ODIR-5K/ODIR-5K/Training Images"
 	filetarget = "../data/ODIR-5K/ODIR-5K/preprocess_graham"
-	createPreprocessingFile(filepath, filetarget, [crop, resize, graham])
+	filepath = "../data/APTOS/resized train 15"
+	filetarget = "../data/APTOS/preprocess_graham"
+	if not os.path.exists(filetarget):
+		createPreprocessingFile(filepath, filetarget, graham)
+	elif os.path.getsize(filetarget) == 0:
+		createPreprocessingFile(filepath, filetarget, graham)
