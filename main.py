@@ -7,7 +7,8 @@ import model.metric as module_metric
 import model.model as module_arch
 import model.model_mult as model_mult
 from parse_config import ConfigParser
-from trainer.trainer import Trainer
+#from trainer.trainer import Trainer
+#from trainer.trainer_mult import Trainer
 from utils.util import prepare_device
 import data_loader.data_loaders as module_data1
 
@@ -30,6 +31,11 @@ def main(config):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
     np.random.seed(SEED)
+
+    if config['mult_data']:
+        from trainer.trainer_mult import Trainer
+    else:
+        from trainer.trainer import Trainer
     
 
     device, device_ids = prepare_device(config['n_gpu'])
@@ -45,10 +51,13 @@ def main(config):
 
     
     #model = models.alexnet(pretrained=True).to(device)
+    print("DEBUT")
     model = config.init_obj('model', model_mult)
+    print("DEBUT")
     model = model.getModel()
     model = model.to(device)
     model.train() # deja fait dans trainer
+    print("FIIIIIN")
 
     #model = models.resnet18(pretrained=True)
     #model = models.alexnet(pretrained=True)

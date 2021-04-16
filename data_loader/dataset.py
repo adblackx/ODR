@@ -60,7 +60,8 @@ class Dataset(torch.utils.data.Dataset):
         if not self.extended:
             return img_transformed, label
         else:
-            age = self.labels[index]
+            age = int(self.age[index])
+            #sex = int(self.sex[index] == "Male" )
 
             return img_transformed, label, age
 

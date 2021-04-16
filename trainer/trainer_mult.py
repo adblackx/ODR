@@ -40,14 +40,13 @@ class Trainer(BaseTrainer):
 		:param epoch: Integer, current training epoch.
 		:return: A log that contains average loss and metric in this epoch.
 		"""
-		
 		self.model.train()
 		self.train_metrics.reset()
-		for batch_idx, (data, target) in enumerate(self.data_loader):
-			data, target = data.to(self.device), target.to(self.device)
+		for batch_idx, (data, target,tab) in enumerate(self.data_loader):
+			data, target,tab = data.to(self.device), target.to(self.device), tab.to(self.device)
 
 			self.optimizer.zero_grad()
-			output = self.model(data)
+			output = self.model(data,tab)
 			loss = self.criterion(output, target)
 			loss.backward()
 			self.optimizer.step()
@@ -78,7 +77,7 @@ class Trainer(BaseTrainer):
 			self.lr_scheduler.step()
 
 
-		output = self.model(data)
+		output = self.model(data,tab)
 		loss = self.criterion(output, target)	
 
 		self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
@@ -97,10 +96,10 @@ class Trainer(BaseTrainer):
 		self.model.eval()
 		self.valid_metrics.reset()
 		with torch.no_grad():
-			for batch_idx, (data, target) in enumerate(self.valid_data_loader):
-				data, target = data.to(self.device), target.to(self.device)
+			for batch_idx, (data, target,tab) in enumerate(self.valid_data_loader):
+				data, target,tab = data.to(self.device), target.to(self.device),target.to(self.device)
 
-				output = self.model(data)
+				output = self.model(data,tab)
 				loss = self.criterion(output, target)
 
 				self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
@@ -113,7 +112,7 @@ class Trainer(BaseTrainer):
 		for name, p in self.model.named_parameters():
 			self.writer.add_histogram(name, p, bins='auto')
 
-		output = self.model(data)
+		output = self.model(data,tab)
 		loss = self.criterion(output, target)
 		self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
 		self.writer.add_scalar('Loss',  loss)

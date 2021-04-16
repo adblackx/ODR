@@ -103,7 +103,7 @@ class odr_data_loader(DataLoader):
 		print("train size:", len(train_idx),"-- validation size:", len(valid_idx), "-- total size dataset:", len(train_idx)+len(valid_idx))
 		self.countNbElementByClasses(labels[train_idx], msg= "[TRAIN SET]")
 		self.countNbElementByClasses(labels[valid_idx], msg= "[VALIDATION SET]")
-		print(train_sampler)
+		#print(train_sampler)
 		
 
 		return train_sampler, valid_sampler

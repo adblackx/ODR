@@ -2,8 +2,8 @@
     "name": "Plot", 
     "n_gpu": 1,
 
-    "model_path": "saved/models/Garaham/0415_170953/checkpoint-epoch12.pth",
-    "affiche": "saved/models/Garaham/0415_154950/metrics.csv",
+    "model_path": "saved/models/Garaham/0415_191654/checkpoint-epoch.pth",
+    "affiche": "saved/models/Garaham/0415_191654/metrics.csv",
 
 
     "model": {
@@ -12,7 +12,7 @@
             "num_classes": 2,
             "feature_extract": false,
             "use_pretrained": true,
-            "model_name": "alexnet"        
+            "model_name": "alexnet_custom"        
         }
     },
 
@@ -25,7 +25,8 @@
             "shuffle": false,
             "equal_dist":true,
             "validation_split": 0.05,
-            "num_workers": 2
+            "num_workers": 2,
+            "extended": true
         }
     },
     "trainer": {
