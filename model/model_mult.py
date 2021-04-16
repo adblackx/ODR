@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import torchvision
+from model.alexnet_custom import alexnetcustom
+from model.mymodel import MyModel
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
@@ -43,6 +45,36 @@ class Model_Mult():
 			model_ft.fc = nn.Linear(num_ftrs, num_classes)
 			input_size = 224
 
+		elif model_name == "alexnet_custom":
+			""" Resnet18
+			"""
+			model_ft = alexnetcustom(pretrained=use_pretrained)
+			print(model_ft)
+			self.set_parameter_requires_grad(model_ft, feature_extract)
+			num_ftrs = model_ft.classifier[6].in_features
+			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+			input_size = 224
+
+		elif model_name == "mymodel":
+			""" Resnet18
+			"""
+			size_out = num_classes*100
+			model_cnn = self.initialize_model("resnet", size_out, feature_extract, use_pretrained)
+			model_ft = MyModel(model_cnn,size_out,num_classes)
+
+
+
+		elif model_name == "alexnet_custom":
+			""" Resnet18
+			"""
+			model_ft = alexnetcustom(pretrained=use_pretrained)
+			print(model_ft)
+			self.set_parameter_requires_grad(model_ft, feature_extract)
+			num_ftrs = model_ft.classifier[6].in_features
+			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+			input_size = 224
+
+			
 		elif model_name == "alexnet":
 			""" Alexnet
 			"""
@@ -51,6 +83,7 @@ class Model_Mult():
 			num_ftrs = model_ft.classifier[6].in_features
 			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
 			input_size = 224
+
 
 		elif model_name == "vgg":
 			""" VGG11_bn

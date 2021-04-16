@@ -25,6 +25,7 @@ class Dataset(torch.utils.data.Dataset):
 
         self.labels = data['Label'].to_numpy()
         self.list_IDs = data['Image'].to_numpy()#+ ".jpg"
+        self.age = data['Patient Age'].to_numpy()
         print(self.labels)
         for i in range(len(self.labels)):
             self.labels[i] = int(self.labels[i][1])
@@ -75,7 +76,9 @@ class Dataset(torch.utils.data.Dataset):
         if not self.extended:
             return img_transformed, label
         else:
-            age = self.labels[index]
+            age = int(self.age[index])
+            #sex = int(self.sex[index] == "Male" )
+
             return img_transformed, label, age
 
 

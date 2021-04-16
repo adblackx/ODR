@@ -58,10 +58,18 @@ def get_all_preds(network, dataloader):
 	"""function to return the number of correct predictions across data set"""
 	all_preds = torch.tensor([])
 	model = network
-	for batch in dataloader:
-		images, labels = batch
-		preds = model(images) # get preds
-		all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
+	if dataloader.dataset.extended:
+		for batch in dataloader:
+			images, labels,data = batch
+			print(data.size())
+			print(data)
+			preds = model(images,data) # get preds
+			all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
+	else:
+		for batch in dataloader:
+			images, labels, = batch
+			preds = model(images) # get preds
+			all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
 		
 	return all_preds
 
@@ -161,9 +169,6 @@ def afficher(config):
 	aff.printAccuracy()
 	"""
 
-	aff = Plot(config['affiche'])
-	aff.printLoss()
-	
 	#model = models.alexnet(pretrained=True)
 
 	device, device_ids = prepare_device(config['n_gpu'])
@@ -188,8 +193,13 @@ def afficher(config):
 	print("debut")
 	# IL FAUT AVOIR UNE CORRESPONDANCE DE TAILLE ENTRE LES LABELS ET CE QUE DONNE DATA LOADER
 	train_Label = np.empty(len(data_loader.sampler))
-	for i in range(len(data_loader.sampler)):
-		imgSet,train_Label[i] = ds.getItem(i)
+	if not ds.extended:
+		for i in range(len(data_loader.sampler)):
+			imgSet,train_Label[i] = ds.getItem(i)
+	else:
+		for i in range(len(data_loader.sampler)):
+			imgSet,train_Label[i],data = ds.getItem(i)	
+
 	print("fin")
 
 
