@@ -23,8 +23,9 @@ class Dataset(torch.utils.data.Dataset):
         self.extended = extended
         data = pd.read_csv(data_dir)
 
-        self.labels = data['Image'].to_numpy()
-        self.list_IDs = data['Label'].to_numpy()#+ ".jpg"
+        self.labels = data['Label'].to_numpy()
+        self.list_IDs = data['Image'].to_numpy()#+ ".jpg"
+        print(self.labels)
         for i in range(len(self.labels)):
             self.labels[i] = int(self.labels[i][1])
         print(self.labels)
