@@ -25,10 +25,11 @@ class odr_data_loader(DataLoader):
 		
 		self.batch_size = batch_size
 		self.image_dir = image_dir
-		
+		#transforms.Resize(256)
+		#transforms.ToPILImage(mode=None)
 		trsfm  = transforms.Compose([
 			transforms.Resize(256),
-			transforms.CenterCrop(224),
+			transforms.CenterCrop(244),
 			transforms.ToTensor(),
 			transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 		])
@@ -65,23 +66,27 @@ class odr_data_loader(DataLoader):
 		print("inital dataset size :", size)
 
 		#On transforme les labels en chiffres
-		labels_unique = np.unique(labels_list).tolist()
+		'''labels_unique = np.unique(labels_list).tolist()
 		labels = []
 		for i in labels_list:
 			labels.append(labels_unique.index(i))
-		labels = np.array(labels)
+		labels = np.array(labels)'''
 
 		#on construit un tableau d'index qu'on mélange si demandé
+		labels = labels_list
 		idx_full = np.arange(size)
 		if(self.shuffle):
 			np.random.shuffle(idx_full)
 
 		nb_img = np.zeros(len(np.unique(labels)))
+		unique = np.unique(labels)
 		if(self.equal_dist):
-			nb = int(split * len(labels)/len(np.unique(labels)))
+			nb = int(split * len(labels)/len(unique))
 			nb_img += nb
+			for i in range(len(unique)):
+				nb_img[i] = int(min(nb_img[i], np.count_nonzero(labels == i)/3))
 		else:
-			for i in np.unique(labels):
+			for i in unique:
 				nb_img[i] = int(split * np.count_nonzero(labels == i))
 			
 		valid_idx = []
