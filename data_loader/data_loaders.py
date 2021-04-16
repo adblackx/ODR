@@ -34,11 +34,19 @@ class odr_data_loader(DataLoader):
 			transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 		])
 
-		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm,extended)
+		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm, extended, True)
 		self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
 
 		self.init_kwargs = {
 			'dataset': self.dataset,
+			'batch_size': batch_size,
+			'shuffle': self.shuffle,
+			'collate_fn': collate_fn,
+			'num_workers': num_workers
+		}
+
+		self.init_kwargs2 = {
+			'dataset': Dataset(self.data_dir, self.image_dir, trsfm, extended, False),
 			'batch_size': batch_size,
 			'shuffle': self.shuffle,
 			'collate_fn': collate_fn,
@@ -96,6 +104,7 @@ class odr_data_loader(DataLoader):
 			if nb_img[idx] > 0:
 				nb_img[idx]-=1
 				valid_idx.append(i)
+		#print(valid_idx)
 
 		valid_idx = np.array(valid_idx)
 		train_idx = np.delete(idx_full, valid_idx)
@@ -119,4 +128,4 @@ class odr_data_loader(DataLoader):
 		if self.valid_sampler is None:
 			return None
 		else:
-			return DataLoader(sampler=self.valid_sampler, **self.init_kwargs)
+			return DataLoader(sampler=self.valid_sampler, **self.init_kwargs2)

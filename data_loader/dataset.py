@@ -10,7 +10,7 @@ import numpy as np
 
 class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
-    def __init__(self, data_dir, image_dir, transform,extended):
+    def __init__(self, data_dir, image_dir, transform, extended , train):
         'Initialization'
 
         """
@@ -32,9 +32,9 @@ class Dataset(torch.utils.data.Dataset):
             self.labels[i] = int(self.labels[i][1])
         print(self.labels)
         self.transform = transform
+        self.train = train
 
         #print(self.list_IDs[1:10])
-
     def __len__(self):
         'Denotes the total number of samples'
         return len(self.labels)
@@ -50,25 +50,29 @@ class Dataset(torch.utils.data.Dataset):
         y = self.labels[ID]
         return X, y
         """
-    
+
         dataAugmentation = transforms.Compose([
-            transforms.RandomHorizontalFlip(p=0.7),
-            transforms.RandomVerticalFlip(p=0.7),
-            transforms.RandomRotation((90,180)),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.5),
+            transforms.RandomRotation(90),
         ])
 
         label = self.labels[index]
         ID = self.list_IDs[index]
+        #print(ID)
 
         img_path = self.image_dir + ID
         img = Image.open(img_path)
-        if(label != 0):
+        if(self.train):
             img = dataAugmentation(img)
         img_transformed = self.transform(img)
+        
 
         #labels_unique = np.unique(self.labels)
         #label = self.labels[index]
         #label = np.where(labels_unique == label)[0][0]
+
+
 
         if not self.extended:
             return img_transformed, label

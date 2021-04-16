@@ -2,7 +2,6 @@
     "name": "Garaham", 
     "n_gpu": 1,
     "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
-    "mult_data": true,
 
     "arch": {
         "type": "Odr_model",
@@ -15,7 +14,7 @@
             "num_classes": 2,
             "feature_extract": false,
             "use_pretrained": true,
-            "model_name": "mymodel"        
+            "model_name": "alexnet"        
         }
     },
 
@@ -24,12 +23,12 @@
         "args":{
             "data_dir": "data/ODIR-5K/csv/normale_vs_diabetic.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 100,
+            "batch_size": 200,
             "shuffle": false,
             "equal_dist":true,
             "validation_split": 0.3,
             "num_workers": 2,
-            "extended": true
+            "extended": false
         }
     },
     "optimizer": {
