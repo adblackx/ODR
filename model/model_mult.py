@@ -12,7 +12,7 @@ import os
 import copy
 
 class Model_Mult():
-	def __init__(self, num_classes, feature_extract, use_pretrained=True,model_name="alexnet"):
+	def __init__(self, num_classes, feature_extract, use_pretrained=True, model_name="alexnet"):
 		
 		self.num_classes = num_classes
 		self.feature_extract = feature_extract
