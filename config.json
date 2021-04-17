@@ -11,7 +11,7 @@
     "model": {
         "type": "Model_Mult",
         "args": {
-            "num_classes": 8,
+            "num_classes": 2,
             "feature_extract": false,
             "use_pretrained": true,
             "model_name": "alexnet"        
@@ -21,12 +21,12 @@
     "data_loader": {
         "type": "odr_data_loader", 
         "args":{
-            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
+            "data_dir": "data/ODIR-5K/csv/normale_vs_diabetic.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
             "batch_size": 200,
             "shuffle": false,
             "equal_dist":true,
-            "validation_split": 0.1,
+            "validation_split": 0.3,
             "num_workers": 2,
             "extended": false
         }

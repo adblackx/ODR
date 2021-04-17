@@ -2,8 +2,8 @@
     "name": "Plot", 
     "n_gpu": 1,
 
-    "model_path": "saved/models/Garaham/0415_191654/checkpoint-epoch.pth",
-    "affiche": "saved/models/Garaham/0415_191654/metrics.csv",
+    "model_path": "saved/models/Garaham/0416_225242/checkpoint-epoch.pth",
+    "affiche": "saved/models/Garaham/0416_225242/metrics.csv",
 
 
     "model": {
@@ -12,7 +12,7 @@
             "num_classes": 2,
             "feature_extract": false,
             "use_pretrained": true,
-            "model_name": "alexnet_custom"        
+            "model_name": "mymodel"        
         }
     },
 
@@ -21,7 +21,7 @@
         "args":{
             "data_dir": "data/ODIR-5K/csv/normale_vs_diabetic.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 512,
+            "batch_size": 100,
             "shuffle": false,
             "equal_dist":true,
             "validation_split": 0.05,
