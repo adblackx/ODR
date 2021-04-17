@@ -13,7 +13,7 @@ class odr_data_loader(DataLoader):
 	"""
 	MNIST data loading demo using BaseDataLoader
 	"""
-	def __init__(self, data_dir, image_dir, batch_size, shuffle, equal_dist, validation_split, num_workers,extended, collate_fn=default_collate):
+	def __init__(self, data_dir, image_dir, batch_size, shuffle, equal_dist, validation_split, num_workers,extended, dataAug, collate_fn=default_collate):
 		"""trsfm = transforms.Compose([
 			transforms.ToTensor(),
 			transforms.Normalize((0.1307,), (0.3081,))
@@ -34,7 +34,7 @@ class odr_data_loader(DataLoader):
 			transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 		])
 
-		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm, extended, True)
+		self.dataset = Dataset(self.data_dir, self.image_dir, trsfm, extended, dataAug)
 		self.sampler, self.valid_sampler = self._split_sampler(self.validation_split)
 
 		self.init_kwargs = {
@@ -109,6 +109,14 @@ class odr_data_loader(DataLoader):
 		valid_idx = np.array(valid_idx)
 		train_idx = np.delete(idx_full, valid_idx)
 
+		'''comt = 0
+		delete_idx = []
+		for i in train_idx:
+			if labels[i] == 0:
+				comt += 1
+			if comt >= 5002:
+				delete_idx.append(i)
+		train_idx = np.delete(idx_full, delete_idx)'''
 		#normalement on peut s'en passer ?
 		train_sampler = SubsetRandomSampler(train_idx)
 		valid_sampler = SubsetRandomSampler(valid_idx)

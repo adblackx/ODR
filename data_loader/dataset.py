@@ -10,7 +10,7 @@ import numpy as np
 
 class Dataset(torch.utils.data.Dataset):
     'Characterizes a dataset for PyTorch'
-    def __init__(self, data_dir, image_dir, transform, extended , train):
+    def __init__(self, data_dir, image_dir, transform, extended , dataAug):
         'Initialization'
 
         """
@@ -24,14 +24,16 @@ class Dataset(torch.utils.data.Dataset):
         data = pd.read_csv(data_dir)
 
         self.labels = data['Label'].to_numpy()
-        self.list_IDs = data['Image'].to_numpy()#+ ".jpg"
-        self.age = data['Patient Age'].to_numpy()
+        self.list_IDs = data['Image'].to_numpy()
+        self.age = None
+        if(extended):
+            self.age = data['Patient Age'].to_numpy()
         print(self.labels)
-        for i in range(len(self.labels)):
-            self.labels[i] = int(self.labels[i][1])
+        '''for i in range(len(self.labels)):
+            self.labels[i] = int(self.labels[i][1])'''
         print(self.labels)
         self.transform = transform
-        self.train = train
+        self.dataAug = dataAug
 
         #print(self.list_IDs[1:10])
     def __len__(self):
@@ -62,7 +64,7 @@ class Dataset(torch.utils.data.Dataset):
 
         img_path = self.image_dir + ID
         img = Image.open(img_path)
-        if(self.train):
+        if(self.dataAug):
             img = dataAugmentation(img)
         img_transformed = self.transform(img)
         
@@ -78,7 +80,6 @@ class Dataset(torch.utils.data.Dataset):
         else:
             age = int(self.age[index])
             #sex = int(self.sex[index] == "Male" )
-
             return img_transformed, label, age
 
 

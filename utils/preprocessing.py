@@ -223,6 +223,7 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 		image = Image.open(path)
 		for f in prepro:
 			image = f(image)
+		#image = image.resize((512, 512))
 		path = os.path.join(filetarget,img)
 		image.save(os.path.abspath(path))
 		cpt += 1
@@ -239,6 +240,8 @@ if __name__=="__main__":
 		generateCSV(data_path, "full_prepro.csv")
 	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
 		generateCSV(data_path, "normale_vs_diabetic.csv", filters = [0,1])
+	if not os.path.exists(filetarget + "normale_vs_diabetic_vs_glaucoma.csv"):
+		generateCSV(data_path, "normale_vs_diabetic_vs_glaucoma.csv", filters = [0,1,2])
 	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
 		generateCSV(data_path, "normale_vs_malade.csv", diagnostic_keyphrases = diagnostic_normale_or_not)
 
@@ -246,9 +249,11 @@ if __name__=="__main__":
 	
 	filepath =  "../data/ODIR-5K/ODIR-5K/Training Images"
 	filetarget = "../data/ODIR-5K/ODIR-5K/preprocess_graham"
-	filepath = "../data/APTOS/resized train 15"
-	filetarget = "../data/APTOS/preprocess_graham"
+	#filepath = "../data/APTOS/resized train 15"
+	#filetarget = "../data/APTOS/preprocess_graham"
+	#filetarget = "../data/ODIR-5K/ODIR-5K/resize"
+	prepro = [crop, resize, graham]
 	if not os.path.exists(filetarget):
-		createPreprocessingFile(filepath, filetarget, graham)
+		createPreprocessingFile(filepath, filetarget, prepro)
 	elif os.path.getsize(filetarget) == 0:
-		createPreprocessingFile(filepath, filetarget, graham)
+		createPreprocessingFile(filepath, filetarget, prepro)

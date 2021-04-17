@@ -106,7 +106,7 @@ class Model_Mult():
 		elif model_name == "densenet":
 			""" Densenet
 			"""
-			model_ft = models.densenet121(pretrained=use_pretrained)
+			model_ft = models.densenet161(pretrained=use_pretrained)
 			self.set_parameter_requires_grad(model_ft, feature_extract)
 			num_ftrs = model_ft.classifier.in_features
 			model_ft.classifier = nn.Linear(num_ftrs, num_classes)
