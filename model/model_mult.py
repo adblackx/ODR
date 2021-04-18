@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import torchvision
+from model.myAlexnet import myAlexnet
 from model.alexnet_custom import alexnetcustom
 from model.mymodel import MyModel
 from torchvision import datasets, models, transforms
@@ -125,6 +126,14 @@ class Model_Mult():
 			num_ftrs = model_ft.fc.in_features
 			model_ft.fc = nn.Linear(num_ftrs,num_classes)
 			input_size = 299
+
+		elif model_name == "myalexnet":
+			model_ft = myAlexnet(pretrained=use_pretrained)
+			print(model_ft)
+			self.set_parameter_requires_grad(model_ft, feature_extract)
+			num_ftrs = model_ft.classifier[6].in_features
+			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+			input_size = 224
 
 		else:
 			print("Invalid model name, exiting...")

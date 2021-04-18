@@ -59,6 +59,8 @@ class Dataset(torch.utils.data.Dataset):
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomVerticalFlip(p=0.5),
             transforms.RandomRotation(90),
+            transforms.RandomAffine(10, shear=50),
+            transforms.Pad(25, fill=0, padding_mode="reflect")
         ])
 
         label = self.labels[index]
@@ -67,6 +69,8 @@ class Dataset(torch.utils.data.Dataset):
 
         img_path = self.image_dir + ID
         img = Image.open(img_path)
+        #img = (img - np.min(img)) / (np.max(img) - np.min(img))
+        #img = Image.fromarray(img, 'RGB')
         if(self.dataAug):
             img = dataAugmentation(img)
         img_transformed = self.transform(img)

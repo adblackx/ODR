@@ -91,8 +91,11 @@ class odr_data_loader(DataLoader):
 		if(self.equal_dist):
 			nb = int(split * len(labels)/len(unique))
 			nb_img += nb
+			cpt = 0
 			for i in range(len(unique)):
 				nb_img[i] = int(min(nb_img[i], np.count_nonzero(labels == i)/3))
+				cpt += nb_img[i]
+			print("Real split : {}%".format(cpt/size))
 		else:
 			for i in unique:
 				nb_img[i] = int(split * np.count_nonzero(labels == i))

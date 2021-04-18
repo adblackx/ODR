@@ -26,7 +26,7 @@ class Trainer(BaseTrainer):
 		self.do_validation = self.valid_data_loader is not None
 		self.lr_scheduler = lr_scheduler
 		self.log_step = int(np.sqrt(data_loader.batch_size))
-
+		self.best_valid = 0
 		self.train_metrics = MetricTracker('loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer)
 		self.valid_metrics = MetricTracker('loss', *[m.__name__ for m in self.metric_ftns], writer=self.writer)
 
@@ -73,7 +73,6 @@ class Trainer(BaseTrainer):
 			val_log = self._valid_epoch(epoch)
 			log.update(**{'val_'+k : v for k, v in val_log.items()})
 
-
 		if self.lr_scheduler is not None:
 			self.lr_scheduler.step()
 
@@ -118,7 +117,16 @@ class Trainer(BaseTrainer):
 		self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
 		self.writer.add_scalar('Loss',  loss)
 
-		return self.valid_metrics.result()
+		val_log = self.valid_metrics.result()
+		actual_accu = val_log['accuracy']
+		if(actual_accu - self.best_valid > 0.0025 and self.save):
+			self.best_valid = actual_accu
+			#self._save_checkpoint(epoch, save_best=True)
+			filename = str(self.checkpoint_dir / 'checkpoint-best-epoch.pth')
+			torch.save(self.model.state_dict(), filename)
+			self.logger.info("Saving checkpoint: {} ...".format(filename))
+
+		return val_log
 
 	def _progress(self, batch_idx):
 		base = '[{}/{} ({:.0f}%)]'
