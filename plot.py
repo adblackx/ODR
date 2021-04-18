@@ -58,6 +58,7 @@ class Plot():
 def get_all_preds(network, dataloader):
 	"""function to return the number of correct predictions across data set"""
 	all_preds = torch.tensor([])
+	true_preds = torch.tensor([])
 	model = network
 	if dataloader.dataset.extended:
 		for batch in dataloader:
@@ -66,13 +67,15 @@ def get_all_preds(network, dataloader):
 			#print(data)
 			preds = model(images,data) # get preds
 			all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
+			true_preds = torch.cat((true_preds, labels), dim=0)
 	else:
 		for batch in dataloader:
 			images, labels, = batch
 			preds = model(images) # get preds
 			all_preds = torch.cat((all_preds, preds), dim=0) # join along existing axis
+			true_preds = torch.cat((true_preds, labels), dim=0)
 		
-	return all_preds
+	return all_preds, true_preds
 
 def get_num_correct(preds, labels):
 	return preds.argmax(dim=1).eq(labels).sum().item()
@@ -125,7 +128,7 @@ def plot_confusion_matrix(cm,
 	if cmap is None:
 		cmap = plt.get_cmap('Blues')
 
-	plt.figure(figsize=(15, 10))
+	plt.figure(figsize=(15, 15))
 	plt.imshow(cm, interpolation='nearest', cmap=cmap)
 	plt.title(title)
 	plt.colorbar()
@@ -190,6 +193,7 @@ def afficher(config):
 		model = torch.nn.DataParallel(model, device_ids=device_ids)
 		print("AAAAAAAAAAAAAAAAAA")
 
+	#print(torch.load(PATH))
 	model.load_state_dict(torch.load(PATH))
 	model.eval() # voir doc pk
 
@@ -211,9 +215,10 @@ def afficher(config):
 
 
 	pred_data_loader = torch.utils.data.DataLoader(batch_size=10000, dataset=train_Label, num_workers=1)
-	all_preds= get_all_preds(network=model, dataloader=data_loader)
+	valid_data_loader = data_loader.split_validation()
+	all_preds, train_label1 = get_all_preds(network=model, dataloader=valid_data_loader) #data_loader)
 
-	train_label1 = torch.from_numpy(train_Label)
+	#train_label1 = torch.from_numpy(train_Label)
 	print(len(all_preds))
 	print(len(train_label1))
 
@@ -224,7 +229,8 @@ def afficher(config):
 
 
 
-	plot_confusion_matrix(cm=confusion_matrix(y_true=train_Label, y_pred=all_preds.argmax(1)), target_names=np.unique(train_Label), normalize=False)
+	plot_confusion_matrix(cm=confusion_matrix(y_true=train_label1, y_pred=all_preds.argmax(1)), target_names = np.unique(train_label1), normalize=False)
+	plt.savefig("testconf.png")
 
 
 
