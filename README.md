@@ -26,7 +26,7 @@ Pour ne pas avoir à modifier manuellement les chemins de lecture et d'écriture
 
 Toutefois, si le preprocessing ne marche pas, vous pouvez telecharger les images pré-traités [ici](https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4) et les CSV [ici](https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0).
 
-##Execution d'une configuration
+## Execution d'une configuration
 
 L'execution ce fait depuis la racine du projet selon la ligne de commande `python main.py -c config.json`
 
@@ -40,6 +40,7 @@ Le champs `dataAug` permet d'activer ou non la data augmentation, `equal_dist` d
 Les autres options sont les mêmes que pour les autres procédures classiques de CNN, tel que le batch etc. Une fois toute ces étapes terminées on peut alors exécuter le programme.
 
 
+## Tensor board
 `tensorboard --logdir saved/log/`
 
 `python main.py -c config.json`
