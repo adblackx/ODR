@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.svm import SVC
+import itertools
 
 class Plot():
 	def __init__(self,filepath):
@@ -118,9 +119,6 @@ def plot_confusion_matrix(cm,
 	http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
 
 	"""
-	import matplotlib.pyplot as plt
-	import numpy as np
-	import itertools
 
 	accuracy = np.trace(cm) / np.sum(cm).astype('float')
 	misclass = 1 - accuracy
@@ -128,7 +126,7 @@ def plot_confusion_matrix(cm,
 	if cmap is None:
 		cmap = plt.get_cmap('Blues')
 
-	plt.figure(figsize=(15, 15))
+	plt.figure(figsize=(5, 5))
 	plt.imshow(cm, interpolation='nearest', cmap=cmap)
 	plt.title(title)
 	plt.colorbar()
@@ -228,9 +226,10 @@ def afficher(config):
 	 
 
 
-
-	plot_confusion_matrix(cm=confusion_matrix(y_true=train_label1, y_pred=all_preds.argmax(1)), target_names = np.unique(train_label1), normalize=False)
-	plt.savefig("testconf.png")
+	target_names = ["Normale", "Diabète", "Glaucome", "Cataracte", "Dég. Maculaire", "Hypertension", "Myopie path.", "Autres"]
+	#np.unique(train_label1)
+	plot_confusion_matrix(cm=confusion_matrix(y_true=train_label1, y_pred=all_preds.argmax(1)), target_names = target_names , normalize=False)
+	#plt.savefig("testconf.png")
 
 
 
