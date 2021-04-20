@@ -11,7 +11,8 @@ L'architecture du projet est tirée du [Pytorch Project Template](https://github
 ---
 ## Installation des packages
 
-Pour avoir tous les package utilisés ainsi que les versions correspondantes, utilisez: `pip3 install -r requirements.txt`.
+Pour avoir tous les package utilisés ainsi que les versions correspondantes, utilisez: 
+`pip3 install -r requirements.txt`.
 
 ---
 ## Preparation
