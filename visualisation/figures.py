@@ -12,16 +12,21 @@ class Plot():
 		self.data = pd.read_csv(filepath)
 
 
-	def printLoss(self,ax=None,getAx=False,label1="",label2=""):
-		if ax == None:
+	def printLoss(self,ax=None,getAx=False,label1="",label2="",color=""):
+		if ax == None :
 			fig, ax = plt.subplots(figsize=(10,5))
 
 		x = self.data[['epoch']]
 		y1 = self.data[['loss']]
 
 		y2 = self.data[['val_loss']]
-		ax.plot(x, y1, label="train loss"+label1)
-		ax.plot(x, y2, label="validation loss"+label2)
+
+		if color=="":
+			ax.plot(x, y1, label="train loss "+label1)
+			ax.plot(x, y2, label="validation loss "+label2)
+		else:
+			ax.plot(x, y1, label="train loss "+label1, color=color)
+			ax.plot(x, y2, label="validation loss "+label2, color=color,linestyle="--")
 		ax.legend()
 		ax.set_title("Loss en fonction de l'epoque")
 		
@@ -31,7 +36,7 @@ class Plot():
 		else:
 			plt.show()
 
-	def printAccuracy(self,ax=None,getAx=False,label1="",label2=""):
+	def printAccuracy(self,ax=None,getAx=False,label1="",label2="",color=""):
 		if ax == None:
 			fig, ax = plt.subplots(figsize=(10,5))
 
@@ -39,11 +44,16 @@ class Plot():
 		y1 = self.data[['accuracy']]
 		y2 = self.data[['val_accuracy']]
 
-		ax.plot(x, y1, label="train accuracy"+label1)
-		ax.plot(x, y2, label="validation accuracy"+label2)
+		if color=="":
+			ax.plot(x, y1, label="train accuracy "+label1)
+			ax.plot(x, y2, label="validation accuracy "+label2)
+		else:
+			ax.plot(x, y1, label="train accuracy "+label1, color=color)
+			ax.plot(x, y2, label="validation accuracy "+label2, color=color,linestyle="--")
 		ax.legend()
-		ax.set_title("Accuracy en fonction de l'epoque")
-		plt.show()
+		ax.set_title("Loss en fonction de l'epoque")
+		
+
 		if getAx:
 			return ax
 		else:
