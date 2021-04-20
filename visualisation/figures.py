@@ -12,29 +12,42 @@ class Plot():
 		self.data = pd.read_csv(filepath)
 
 
-	def printLoss(self):
-		fig, ax = plt.subplots(figsize=(10,5))
+	def printLoss(self,ax=None,getAx=False,label1="",label2=""):
+		if ax == None:
+			fig, ax = plt.subplots(figsize=(10,5))
+
 		x = self.data[['epoch']]
 		y1 = self.data[['loss']]
 
 		y2 = self.data[['val_loss']]
-		ax.plot(x, y1, label="train loss")
-		ax.plot(x, y2, label="validation loss")
+		ax.plot(x, y1, label="train loss"+label1)
+		ax.plot(x, y2, label="validation loss"+label2)
 		ax.legend()
 		ax.set_title("Loss en fonction de l'epoque")
-		plt.show()
+		
 
-	def printAccuracy(self):
-		fig, ax = plt.subplots(figsize=(10,5))
+		if getAx:
+			return ax
+		else:
+			plt.show()
+
+	def printAccuracy(self,ax=None,getAx=False,label1="",label2=""):
+		if ax == None:
+			fig, ax = plt.subplots(figsize=(10,5))
+
 		x = self.data[['epoch']]
 		y1 = self.data[['accuracy']]
 		y2 = self.data[['val_accuracy']]
 
-		ax.plot(x, y1, label="train accuracy")
-		ax.plot(x, y2, label="validation accuracy")
+		ax.plot(x, y1, label="train accuracy"+label1)
+		ax.plot(x, y2, label="validation accuracy"+label2)
 		ax.legend()
 		ax.set_title("Accuracy en fonction de l'epoque")
 		plt.show()
+		if getAx:
+			return ax
+		else:
+			plt.show()
 
 	def plot_confusion_matrix(self,
 								cm,
