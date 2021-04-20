@@ -4,6 +4,9 @@ Ocular Disease Recognition
 Pour pouvoir exécter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing.
 Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows).
 
+Toutefois, si le preprocessing ne marche pas, voici les images:
+https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4
+
 Des fichiers csv et de nouvelles images sont alors générés. Les chemins des fichiers csv générés sont alors à reporter dans "data_dir" de config.json et le chemin pour les images dans "image_dir".
 
 Enfin, il reste plus qu'à choisir un model, en utilisant la classe Model_Mult, on peut alors lui donner un "model_name" se trouvant dans la classe, pour obtenir un modèle.
@@ -27,7 +30,12 @@ On peut faire la même chose mais en affichant les csv grâce à la classe plot.
 
 python plot.py -c config_plot.json
 
-On peut alors afficher trois figures, le loss en focntion de l'époque, l'accuracy en fonctrion de l'epoque ou encore la matrice de confusion.
+On peut alors afficher trois figures, le loss en focntion de l'époque, l'accuracy en fonctrion de l'epoque ou encore la matrice de confusion. (Attention, la metrics est ici généré une fois le modèle chargé, bien faire correspondre config_plot.json et le config.json enregistré ).
+
+Il est à noter qu'on enregistre le meilleur modèle en fonction de la valid accura, qu'on enregistre le config.js, ainsi qu'un csv.
+
+Nous mettons à disposition nos résultats contenus dans les csv:
+https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0
 
 Cette architecture est tirée de https://github.com/moemen95/Pytorch-Project-Template .
 De nombreuses fonctions sont tirées de pytorch et de scikit learn.
