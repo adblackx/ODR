@@ -1,5 +1,7 @@
 # <h1 align="center">Ocular Disease Recognition</h1>
-_Alan Adamiak, Antoine Barbannaud, Sara Droussi, Maya Gawinowski, Ramdane Mouloua, Romain Mussard_
+<p align="center" style="font-style:italic;">
+    Alan Adamiak, Antoine Barbannaud, Sara Droussi, Maya Gawinowski, Ramdane Mouloua, Romain Mussard
+</p>
 
 Ceci est le repo GitHub du projet de reconnaissance de maladies oculaires.
 <p align="center">
@@ -11,7 +13,7 @@ L'architecture du projet est tirée du [Pytorch Project Template](https://github
 ---
 ## Installation des packages
 
-Pour avoir tous les package utilisés ainsi que les versions correspondantes, utilisez: 
+Pour avoir tous les package utilisés ainsi que les versions correspondantes, utilisez:
 `pip3 install -r requirements.txt`.
 
 ---
