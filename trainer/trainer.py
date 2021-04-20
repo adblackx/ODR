@@ -112,6 +112,7 @@ class Trainer(BaseTrainer):
 		for name, p in self.model.named_parameters():
 			self.writer.add_histogram(name, p, bins='auto')
 
+		# we added spùe custom here
 		output = self.model(data)
 		loss = self.criterion(output, target)
 		self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
@@ -121,7 +122,8 @@ class Trainer(BaseTrainer):
 		actual_accu = val_log['accuracy']
 		if(actual_accu - self.best_valid > 0.0025 and self.save):
 			self.best_valid = actual_accu
-			#self._save_checkpoint(epoch, save_best=True)
+			if self.tensorboard: # is true you can use tensorboard
+				self._save_checkpoint(epoch, save_best=True)
 			filename = str(self.checkpoint_dir / 'checkpoint-best-epoch.pth')
 			torch.save(self.model.state_dict(), filename)
 			self.logger.info("Saving checkpoint: {} ...".format(filename))

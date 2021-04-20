@@ -9,16 +9,14 @@ import numpy as np
 
 
 class Dataset(torch.utils.data.Dataset):
-    'Characterizes a dataset for PyTorch'
+    """
+    We have created our own DataSet class to be able to iterate on our data according to the label, 
+    an image but also according to a third data, which can be the age or the sex
+    """
     def __init__(self, data_dir, image_dir, transform, extended , dataAug):
         'Initialization'
 
-        """
-        to_drop = ['ID', 'Patient Age', 'Patient Sex', 'Left-Fundus', 'Right-Fundus',
-           'Left-Diagnostic Keywords', 'Right-Diagnostic Keywords', 'N', 'D', 'G',
-           'C', 'A', 'H', 'M', 'O', 'filepath', 'target']
-        data = data.drop(columns = to_drop)
-        """
+
         self.image_dir = image_dir
         self.extended = extended
         data = pd.read_csv(data_dir)
@@ -31,28 +29,21 @@ class Dataset(torch.utils.data.Dataset):
             self.age = data['Patient Age'].to_numpy()
             self.sex = data['Patient Sex'].to_numpy()
         print(self.labels)
-        #Plus nécessaire avec nouveau générateur de csv
-        '''for i in range(len(self.labels)):
-            self.labels[i] = int(self.labels[i][1])'''
+
         print(self.labels)
         self.transform = transform
         self.dataAug = dataAug
 
-        #print(self.list_IDs[1:10])
     def __len__(self):
         'Denotes the total number of samples'
         return len(self.labels)
 
     def __getitem__(self, index):
         """
-        'Generates one sample of data'
-        print("ICI")
-        # Select sample
-        ID = self.list_IDs[index]
-        # Load data and get label
-        X = torch.load('data/preprocessed_images/' + ID)
-        y = self.labels[ID]
-        return X, y
+            Index: index of the item
+            self.dataAug: if true apply dataAugmentation transformations to the image
+            self.extended: if true returns img_transformed, label AND age (or sex)
+
         """
 
         dataAugmentation = transforms.Compose([
@@ -65,29 +56,19 @@ class Dataset(torch.utils.data.Dataset):
 
         label = self.labels[index]
         ID = self.list_IDs[index]
-        #print(ID)
 
         img_path = self.image_dir + ID
         img = Image.open(img_path)
-        #img = (img - np.min(img)) / (np.max(img) - np.min(img))
-        #img = Image.fromarray(img, 'RGB')
+
         if(self.dataAug):
             img = dataAugmentation(img)
         img_transformed = self.transform(img)
-        
-
-        #labels_unique = np.unique(self.labels)
-        #label = self.labels[index]
-        #label = np.where(labels_unique == label)[0][0]
-
-
 
         if not self.extended:
             return img_transformed, label
         else:
             age = int(self.age[index])
             #sex = int(self.sex[index] == "Male" )
-
             return img_transformed, label, age
 
 

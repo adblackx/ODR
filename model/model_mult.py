@@ -15,6 +15,15 @@ import os
 import copy
 
 class Model_Mult():
+	"""
+	A class that takes a code from the pytorch documentation, which adapts different models
+	num_classes : integer that defines the output of a CNN
+	use_pretrained: bool, if true use transfert learrning by loading a pretrained CNN
+	model_name: text, to load a diffrent CNN
+
+	This class just returns a CNN
+
+	"""
 	def __init__(self, num_classes, feature_extract, use_pretrained=True, model_name="alexnet"):
 		
 		self.num_classes = num_classes
@@ -50,7 +59,6 @@ class Model_Mult():
 			""" Resnet18
 			"""
 			model_ft = alexnetcustom(pretrained=use_pretrained)
-			print(model_ft)
 			self.set_parameter_requires_grad(model_ft, feature_extract)
 			num_ftrs = model_ft.classifier[6].in_features
 			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
@@ -60,7 +68,7 @@ class Model_Mult():
 			""" Resnet18
 			"""
 			size_out = num_classes*100
-			model_cnn = self.initialize_model("alexnet", size_out, feature_extract, use_pretrained)
+			model_cnn = self.initialize_model("vgg", size_out, feature_extract, use_pretrained)
 			model_ft = MyModel(model_cnn,size_out,num_classes)
 
 
@@ -68,8 +76,7 @@ class Model_Mult():
 		elif model_name == "alexnet_custom":
 			""" Resnet18
 			"""
-			model_ft = alexnetcustom(pretrained=use_pretrained)
-			print(model_ft)
+			model_ft = alexnetcustom(pretrained=use_pretrained) # pretrained = false always or it raises an error for the moment
 			self.set_parameter_requires_grad(model_ft, feature_extract)
 			num_ftrs = model_ft.classifier[6].in_features
 			model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
@@ -107,7 +114,7 @@ class Model_Mult():
 		elif model_name == "densenet":
 			""" Densenet
 			"""
-			model_ft = models.densenet161(pretrained=use_pretrained)
+			model_ft = models.densenet121(pretrained=use_pretrained)
 			self.set_parameter_requires_grad(model_ft, feature_extract)
 			num_ftrs = model_ft.classifier.in_features
 			model_ft.classifier = nn.Linear(num_ftrs, num_classes)

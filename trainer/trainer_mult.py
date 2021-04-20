@@ -8,6 +8,7 @@ from utils.util import inf_loop, MetricTracker
 class Trainer(BaseTrainer):
 	"""
 	Trainer class
+	Mult version is used for model using images, labels and some other data like age or sexe
 	"""
 	def __init__(self, model, criterion, metric_ftns, optimizer, config, device,
 				 data_loader, valid_data_loader=None, lr_scheduler=None, len_epoch=None):
@@ -117,6 +118,17 @@ class Trainer(BaseTrainer):
 		self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
 		self.writer.add_scalar('Loss',  loss)
 
+		val_log = self.valid_metrics.result()
+		actual_accu = val_log['accuracy']
+		
+		if(actual_accu - self.best_valid > 0.0025 and self.save):
+			self.best_valid = actual_accu
+			if self.tensorboard:
+				self._save_checkpoint(epoch, save_best=True)
+			filename = str(self.checkpoint_dir / 'checkpoint-best-epoch.pth')
+			torch.save(self.model.state_dict(), filename)
+			self.logger.info("Saving checkpoint: {} ...".format(filename))
+
 		return self.valid_metrics.result()
 
 	def _progress(self, batch_idx):
@@ -135,6 +147,8 @@ class Trainer(BaseTrainer):
 			Saving checkpoints
 			:param epoch: current epoch number
 			:param log: logging information of the epoch
+
+			This is a new feature added by us
 		"""
 
 		fichier = open(self.file_metrics, "a")

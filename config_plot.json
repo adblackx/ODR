@@ -2,31 +2,32 @@
     "name": "Plot", 
     "n_gpu": 1,
 
-    "model_path": "saved/models/Garaham/0416_225242/checkpoint-epoch.pth",
-    "affiche": "saved/models/Garaham/0416_225242/metrics.csv",
+    "model_path": "saved/models/Rapport/0420_015105/checkpoint-best-epoch.pth",
+    "affiche": "saved/models/Rapport/0420_015105/metrics.csv",
 
 
     "model": {
         "type": "Model_Mult",
         "args": {
-            "num_classes": 2,
+            "num_classes": 8,
             "feature_extract": false,
-            "use_pretrained": true,
-            "model_name": "mymodel"        
+            "use_pretrained": false,
+            "model_name": "squeezenet"
         }
     },
 
-    "data_loader": {
-        "type": "odr_data_loader", 
-        "args":{
-            "data_dir": "data/ODIR-5K/csv/normale_vs_diabetic.csv",
+   "data_loader": {
+        "type": "odr_data_loader",
+        "args": {
+            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 100,
+            "batch_size": 128,
             "shuffle": false,
-            "equal_dist":true,
-            "validation_split": 0.05,
+            "equal_dist": true,
+            "validation_split": 0.15,
             "num_workers": 2,
-            "extended": true
+            "extended": false,
+            "dataAug": false
         }
     },
     "trainer": {

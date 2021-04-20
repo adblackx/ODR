@@ -29,7 +29,6 @@ class Dataset(torch.utils.data.Dataset):
         left_name_list=[]
         right_name_list =[]
     
-        # test si maladie unique sur un oeil sinon on rejete la donnée y,X
         for i in range (len (data)):
             if data['Left Text'][i] in ListeMaladie:
                 left_labels_list.append(data['Left Text'][i])
@@ -39,8 +38,6 @@ class Dataset(torch.utils.data.Dataset):
                 right_labels_list.append (data['Right Text'][i])
                 right_name_list.append (data['Right-Fundus'][i])
             
-        #print ("label left", len(left_labels_list))
-        #print ("label right", len(right_labels_list))
         filename_list = np.concatenate((right_name_list, left_name_list), axis=None)
         labels_list = np.concatenate((right_labels_list, left_labels_list), axis=None)
         
@@ -54,16 +51,6 @@ class Dataset(torch.utils.data.Dataset):
         return len(self.labels)
 
     def __getitem__(self, index):
-        """
-        'Generates one sample of data'
-        print("ICI")
-        # Select sample
-        ID = self.list_IDs[index]
-        # Load data and get label
-        X = torch.load('data/preprocessed_images/' + ID)
-        y = self.labels[ID]
-        return X, y
-        """
         ID = self.list_IDs[index]
         img_path = IMG_DIR + ID
         #print("processing", img_path)

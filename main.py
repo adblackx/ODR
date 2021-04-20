@@ -4,11 +4,8 @@ import torch
 import numpy as np
 import model.loss as module_loss
 import model.metric as module_metric
-import model.model as module_arch
 import model.model_mult as model_mult
 from parse_config import ConfigParser
-#from trainer.trainer import Trainer
-#from trainer.trainer_mult import Trainer
 from utils.util import prepare_device
 import data_loader.data_loaders as module_data1
 
@@ -19,13 +16,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-# python load.py -c config.json
+# python main.py -c config.json
 
-# fix random seeds for reproducibility
 
 def main(config):
     print("DEBUT DU PROGRAMME")
 
+    # fix random seeds for reproducibility
     SEED = 1234
     torch.manual_seed(SEED)
     torch.backends.cudnn.deterministic = True
@@ -39,8 +36,6 @@ def main(config):
     
 
     device, device_ids = prepare_device(config['n_gpu'])
-
-
     #Ce code marche et oui hahaha
     logger = config.get_logger('train') # Pour tensorBoard
     train_loader = config.init_obj('data_loader', module_data1)

@@ -1,29 +1,22 @@
 # ODR
 Ocular Disease Recognition
 
-s'execute avec : 
+Le programme principale s'éxecute avec la commande : 
 
 python main.py -c config.json
 
-python plot.py -c config_plot.json
 
-L'éxecution ne marche pas pour le moment.
-
-Petite nouveauté, pour que ça marche il faut installer tensorboard avec pip install tensorflow .
-IEnsuite, il faut exécuter python main.py -c config.json ,  puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
+Petite nouveauté, pour que ça marche il faut installer tensorboard.
+Ensuite, il faut exécuter python main.py -c config.json, dans config.js il faut mettre tensorboard à trye , puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
 
 tensorboard --logdir saved/log/
 
-Copier coller le lien dans un navigateur, et suivre l'évolution en direct
+On peut faire la même chose mais en affichant les csv grâce à la classe plot.py, il suffit alors de reporter dans le fichier config_plot.json, les valeurs pour pour data_loader et model, ensuite il faut reporter le bon chemin pour model_path et affiche ( qui dépend de config.js), puis on peut alors affichier en exécutant:
 
+python plot.py -c config_plot.json
 
-Pour tester 
+On peut alors afficher trois figures, le loss en focntion de l'époque, l'accuracy en fonctrion de l'epoque ou encore la matrice de confusion.
 
-Pour les dossiers:
+Cette architecture est tirée de https://github.com/moemen95/Pytorch-Project-Template .
+De nombreuses fonctions sont tirées de pytorch et de scikit learn.
 
-* Dans model on met le modèle et/ou la fonction de cout, on devra se crée notre propre model, pour une classe qui est un réseau de neurone, elle doit hériter de nn.module
-* data_loader c'est ce qui va nous charger nos données
-* dans trainer on met 
-* utils ce sera des codes annexes 
-
-Pour config.json j'ai mis un exemple qui marche avec dans train.py

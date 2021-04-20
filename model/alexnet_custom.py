@@ -12,6 +12,15 @@ model_urls = {
 
 class AlexNetCustom(nn.Module):
 
+	"""	
+	An alexNet that takes as input an image, a label and an additional data like age or sex
+	This is a new feature added by us.
+
+	We added two linear functions, what we do here is that we 
+	concatenate the product of AlexNet (here not trained, we don't use the transfert learning in fact here)
+
+	"""
+
 	def __init__(self, num_classes: int = 1000) -> None:
 		super(AlexNetCustom, self).__init__()
 		self.features = nn.Sequential(
@@ -49,15 +58,11 @@ class AlexNetCustom(nn.Module):
 		print(x1.size())
 		x1 = self.features(x1)
 		x1 = self.avgpool(x1)
-		#print(x1.size())
 		x1 = torch.flatten(x1, 1)
 		print(x1.size())
 		x1 = self.classifier(x1)
-
 		x2 =  torch.unsqueeze(x2, 1)
-
 		x = torch.cat((x1, x2), dim=1)
-		#print(x.size())
 		x = F.relu(self.fc1(x))
 		x = self.fc2(x) 
 
@@ -65,8 +70,7 @@ class AlexNetCustom(nn.Module):
 
 
 def alexnetcustom(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> AlexNetCustom:
-    """AlexNet model architecture from the
-    `"One weird trick..." <https://arxiv.org/abs/1404.5997>`_ paper.
+    """AlexNet model architecture from the  documentation of pytorch
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
