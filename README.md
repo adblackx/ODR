@@ -1,5 +1,5 @@
 # ODR
-Ocular Disease Recognition
+<h1>Ocular Disease Recognition</h1>
 
 Pour pouvoir exécter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing.
 Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows). Il faut d'abord décompresser l'archive du projet, et le mettre dans un dossier par exemple "data", et dans le fichier plot.py dans le main, il faut alors préciser le maths, du csv, des données bruts
@@ -18,17 +18,17 @@ Une fois toute ces étapes terminées on peut alorsexécuter le programme.
 
 Le programme principale s'éxecute avec la commande : 
 
-python main.py -c config.json
+`python main.py -c config.json`
 
 
 Petite nouveauté, pour que ça marche il faut installer tensorboard.
 Ensuite, il faut exécuter python main.py -c config.json, dans config.js il faut mettre tensorboard à true , puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
 
-tensorboard --logdir saved/log/
+`tensorboard --logdir saved/log/`
 
 On peut faire la même chose mais en affichant les csv grâce à la classe plot.py, il suffit alors de reporter dans le fichier config_plot.json, les valeurs pour pour data_loader et model, ensuite il faut reporter le bon chemin pour model_path et affiche ( qui dépend de config.js), puis on peut alors affichier en exécutant, dans le dossier visualisation:
 
-python plot.py -c config_plot.json
+`python plot.py -c config_plot.json`
 
 On peut alors afficher trois figures, le loss en focntion de l'époque, l'accuracy en fonctrion de l'epoque ou encore la matrice de confusion. (Attention, la metrics est ici généré une fois le modèle chargé, bien faire correspondre config_plot.json et le config.json enregistré ).
 
