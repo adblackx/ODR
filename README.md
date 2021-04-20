@@ -1,41 +1,64 @@
-# ODR
-<h1>Ocular Disease Recognition</h1>
+# <h1 align="center">Ocular Disease Recognition</h1>
+<p align="center" style="font-style:italic;">
+    Alan Adamiak, Antoine Barbannaud, Sara Droussi, Maya Gawinowski, Ramdane Mouloua, Romain Mussard
+</p>
 
-Pour pouvoir exécter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing.
-Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows). Il faut d'abord décompresser l'archive du projet, et le mettre dans un dossier par exemple "data", et dans le fichier plot.py dans le main, il faut alors préciser le maths, du csv, des données bruts
+Ceci est le repo GitHub du projet de reconnaissance de maladies oculaires.
+<p align="center">
+    <img src="./visualisation/rapport/presentation_images/eye_diseases_grid.jpg" style="width:400px;">
+</p>
 
-Toutefois, si le preprocessing ne marche pas, voici les images:
-https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4
+Le dataset utilisé proviens de **Kaggle** vous spouvez le retrouver [ici](https://www.kaggle.com/andrewmvd/ocular-disease-recognition-odir5k).
 
-Des fichiers csv et de nouvelles images sont alors générés. Les chemins des fichiers csv générés sont alors à reporter dans "data_dir" de config.json et le chemin pour les images dans "image_dir".
+L'architecture du projet est tirée du [Pytorch Project Template](https://github.com/victoresque/pytorch-template), et nous avons également tiré de nombreuses fonctions des librairies PyTorch et scikit-learn. Nous enregistrons le meilleur modèle en fonction de la valid accuracy, vous retrouverez nos résultats dans des CSV et les `config.json` utilisés dans le dossier `visualisation/rapport/csv`.
 
-Enfin, il reste plus qu'à choisir un model, en utilisant la classe Model_Mult, on peut alors lui donner un "model_name" se trouvant dans la classe, pour obtenir un modèle.
+---
+## Installation des packages
 
-Attention, les modèles utilisant une donnée supplémentaire tel que le sexe ou l'âge sont au nombre de deux, ce sont "mymodel" et "myAlexnet". Il faut alors mettre "extended" à true pour utiliser les bons Data et Trainer.
+Pour avoir tous les package utilisés ainsi que les versions correspondantes, utilisez:
+`pip3 install -r requirements.txt`.
 
-Les autres options sont les mêmes que pour les autres procédures classiques de CNN, tel que le batch etc.
-Une fois toute ces étapes terminées on peut alorsexécuter le programme.
+---
+## Preparation
+Pour pouvoir exécuter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing. Le preprocessing se trouve dans le dossier utils (si bug sur windows, déplacer a la racine). Il faut d'abord décompresser les données téléchargés sur kaggle et le mettre dans un dossier (par exemple "data"). Dans le fichier *plot.py*  il faut préciser dans le main le paths, du csv, des données bruts.
 
-Le programme principale s'éxecute avec la commande : 
+Des fichiers CSV et de nouvelles images sont alors générées. Les chemins des fichiers CSV générés et des images sont alors à reporter dans les paramètre `data_dir` et `image_dir` de *config.json* respectivement.
+
+Toutefois, si le preprocessing ne marche pas vous pouvez télécharger les images pré-traitées [ici](https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4) et les CSV (contenant les labels) [ici](https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0).
+
+Pour ne pas avoir à modifier manuellement les chemins de lecture et d'écriture nous vous recommandons :
+
+* Si vous téléchargez les données depuis Kaggle de décompresser le dataset en faisant en sorte d'avoir les images d'entraînement dans `data/ODIR-5K/ODIR-5K/Training Images` et le fichier `data.xlsx` qui décrit les données dans `data/ODIR-5K/ODIR-5K/data.xlsx`.
+
+* Si vous teléchargé nos csv et image pré-traités de mettre les images dans `data/ODIR-5K/ODIR-5K/preprocess_graham` et les csv dans `data/ODIR-5K/csv`
+
+
+
+## Execution d'une configuration
+
+L'exécution se fait depuis la racine du projet avec la commande `python main.py -c config.json`.
+
+`config.json` vous permez de configurer le modèle, le dataloader, les metrics et le trainer
+
+:warning: Deux modèles utilisent une donnée supplémentaire (telle que le sexe ou l'âge): **mymodel** et **myAlexnet**. Il faut alors mettre le paramètre `extended` à true dans le *config.json* pour utiliser les bons Data et Trainer.
+
+:warning: La variable `validation_split` ne correspond pas toujours au véritable découpage du set de validation si `equal_dist == True`. En effet pour éviter d'avoir plus d'images de certaines classes dans notre set de validation que dans le set d'entraînement, le dataloader limite la proportion d'images de chaque classe à 1/3 maximum. La véritable `validation_split` est cependant affichée dans le terminal. Actuellement `validation_split = 0.15` donne un split de 10%. Il aurait été trivial de modifier le dataloader pour que le split donnée soit respecté, cependant nous avons choisi de laisser cette imprécision pour que les résultats présentés dans notre rapport soient reproductibles. La correction sera certainement apportée entre temps sur le repo.
+
+Le champs `dataAug` permet d'activer ou non la data augmentation. `equal_dist` permet quand à lui d'avoir la répartition  des classes la plus équitable possible dans la validation. Les autres paramètres sont les mêmes que pour les autres procédures classiques de CN (batch etc.). Une fois cette étape terminée, vous pouvez exécuter le programme.
+
+## Tensor board
+`tensorboard --logdir saved/log/`
 
 `python main.py -c config.json`
 
+`python plot.py -c config_plot.json`
 
-Petite nouveauté, pour que ça marche il faut installer tensorboard.
-Ensuite, il faut exécuter python main.py -c config.json, dans config.js il faut mettre tensorboard à true , puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
+Dans config.js il faut mettre tensorboard à `true`. Puis, pour suivre l'évolution vous devez taper dans un autre terminal en parallèle:
 
 `tensorboard --logdir saved/log/`
 
-On peut faire la même chose mais en affichant les csv grâce à la classe plot.py, il suffit alors de reporter dans le fichier config_plot.json, les valeurs pour pour data_loader et model, ensuite il faut reporter le bon chemin pour model_path et affiche ( qui dépend de config.js), puis on peut alors affichier en exécutant, dans le dossier visualisation:
+On peut faire la même chose mais en affichant les CSV grâce à la classe *plot.py*: il suffit de reporter dans le fichier *config_plot.json* les valeurs pour `data_loader` et `model`. Ensuite, il faut reporter le `model_path` et `affiche` (qui dépend de config.js). Enfin, en se plaçant dans le dossier visualisation on peut afficher en exécutant la commande suivante `python plot.py -c config_plot.json`.
 
-`python plot.py -c config_plot.json`
+On peut alors afficher trois figures: le loss en fonction de l'époque, l'accuracy en fonctrion de l'époque ou encore la matrice de confusion.
 
-On peut alors afficher trois figures, le loss en focntion de l'époque, l'accuracy en fonctrion de l'epoque ou encore la matrice de confusion. (Attention, la metrics est ici généré une fois le modèle chargé, bien faire correspondre config_plot.json et le config.json enregistré ).
-
-Il est à noter qu'on enregistre le meilleur modèle en fonction de la valid accura, qu'on enregistre le config.js, ainsi qu'un csv.
-
-Nous mettons à disposition nos résultats contenus dans les csv:
-https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0
-
-Cette architecture est tirée de https://github.com/moemen95/Pytorch-Project-Template .
-De nombreuses fonctions sont tirées de pytorch et de scikit learn.
+:warning: Attention, `metrics` est ici généré une fois le modèle chargé. Il faut bien faire correspondre *config_plot.json* et le *config.json* enregistré.

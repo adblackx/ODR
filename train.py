@@ -20,6 +20,7 @@ np.random.seed(SEED)
 
 def main(config):
     print("Debut de la fonction main: \n")
+    
     #logger = config.get_logger('train')
 
     # setup data_loader instances

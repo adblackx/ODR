@@ -51,7 +51,7 @@ class Plot():
 			ax.plot(x, y1, label="train accuracy "+label1, color=color)
 			ax.plot(x, y2, label="validation accuracy "+label2, color=color,linestyle="--")
 		ax.legend()
-		ax.set_title("Loss en fonction de l'epoque")
+		ax.set_title("Accuracy en fonction de l'epoque")
 		
 
 		if getAx:

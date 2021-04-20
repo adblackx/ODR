@@ -13,7 +13,7 @@
             "num_classes": 8,
             "feature_extract": false,
             "use_pretrained": true,
-            "model_name": "mymodel2"
+            "model_name": "mymodel"
         }
     },
     "data_loader": {
@@ -21,7 +21,7 @@
         "args": {
             "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
             "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
-            "batch_size": 40,
+            "batch_size": 256,
             "shuffle": false,
             "equal_dist": true,
             "validation_split": 0.15,
