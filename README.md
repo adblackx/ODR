@@ -33,7 +33,7 @@ L'execution ce fait depuis la racine du projet selon la ligne de commande `pytho
 
 :warning: Deux modèles utilisent une donnée supplémentaire telle que le sexe ou l'âge: **mymodel** et **myAlexnet**. Il faut alors mettre "extended" à true dans le `config.json` pour utiliser les bons Data et Trainer.
 
-:warning: La varibale `validation_split` si `equal_dist == True` ne correpsond pas toujours au véritable découpage du set de validation. En effet pour éviter d'avoir plus d'image de certaines classes dans notre set de validation que dans le set d'entrainement, le dataloader limite la proportion d'image de chaque classe à 1/3 maximum. La véritable `validation_split` est cependant afficher dans le terminale. Acutellement `validation_split = 0.15` donne un split de 10%.
+:warning: La varibale `validation_split` si `equal_dist == True` ne correpsond pas toujours au véritable découpage du set de validation. En effet pour éviter d'avoir plus d'image de certaines classes dans notre set de validation que dans le set d'entrainement, le dataloader limite la proportion d'image de chaque classe à 1/3 maximum. La véritable `validation_split` est cependant afficher dans le terminale. Acutellement `validation_split = 0.15` donne un split de 10%. (Il aurait été simple de modifier le dataloader pour que le split donnée soit respecté mais nous avons choisit de laisser ce "bug" pour que les résultats présentés dans notre rapport soit reproductibles, la correction sera certainement apporté entre temps sur le github)
 
 Le champs `dataAug` permet d'activer ou non la data augmentation, `equal_dist` d'avoir une répartition la plus équitable possbile des classes dans la validation.
 
