@@ -123,11 +123,18 @@ def graham(image, scale = 320):
 	return image
 
 def to_grayscale(image):
-	# switch to black and white
+	"""
+		switch to black and white
+		image: the input image
+	"""
 	image = ImageOps.grayscale(image)
 	return image
 
 def generateCsvFromRaw(DATA_PATH):
+	"""
+		The objective of this function is to take in entry the path of a csv,
+		 and to edit that if, to keep only the images which interest us
+	"""
 
 	data = pd.read_excel(DATA_PATH)
 	LeftText=[]
@@ -172,6 +179,11 @@ def generateCsvFromRaw(DATA_PATH):
 	data.to_csv('full_prepro.csv', mode='a', header=key_columns, index=False, encoding='utf-8')
 
 def getDiagnostic(text, diagnostic_keyphrases):
+	"""
+		text: a string containing one or more diagnoses for a given eye
+		diagnostic_keyphrases: a list of string of all possible diagnoses
+		
+	"""
 	diagnostics = re.split('， *|, *', text)
 	
 	l = []
@@ -183,6 +195,15 @@ def getDiagnostic(text, diagnostic_keyphrases):
 	return l
 
 def generateCSV(data_path, csv_name, discard_no_labels = True, discard_more_one_label = True, filters = [], diagnostic_keyphrases = diagnostic_keyphrases):
+	"""
+	data_path: path of the data.xlsx file
+	csv_name: the name of the csv that will be generated
+	discard_no_labels : if true, removes images without labels
+	discard_more_one_label: remove images that have more than 1 label
+	filters: the different filters that will be applied
+	diagnostic_keyphrases: a list of string of all possible diagnoses
+	"""
+
 	filetarget = "../data/ODIR-5K/csv/"
 	if not os.path.exists(filetarget):
 		os.makedirs(filetarget)
