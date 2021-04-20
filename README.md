@@ -1,13 +1,25 @@
 # ODR
 Ocular Disease Recognition
 
+Pour pouvoir exécter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing.
+Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows).
+
+Des fichiers csv et de nouvelles images sont alors générés. Les chemins des fichiers csv générés sont alors à reporter dans "data_dir" de config.json et le chemin pour les images dans "image_dir".
+
+Enfin, il reste plus qu'à choisir un model, en utilisant la classe Model_Mult, on peut alors lui donner un "model_name" se trouvant dans la classe, pour obtenir un modèle.
+
+Attention, les modèles utilisant une donnée supplémentaire tel que le sexe ou l'âge sont au nombre de deux, ce sont "mymodel" et "myAlexnet". Il faut alors mettre "extended" à true pour utiliser les bons Data et Trainer.
+
+Les autres options sont les mêmes que pour les autres procédures classiques de CNN, tel que le batch etc.
+Une fois toute ces étapes terminées on peut alorsexécuter le programme.
+
 Le programme principale s'éxecute avec la commande : 
 
 python main.py -c config.json
 
 
 Petite nouveauté, pour que ça marche il faut installer tensorboard.
-Ensuite, il faut exécuter python main.py -c config.json, dans config.js il faut mettre tensorboard à trye , puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
+Ensuite, il faut exécuter python main.py -c config.json, dans config.js il faut mettre tensorboard à true , puis pour suivre l'évolution, on peut doit alors taper dans un autre terminal en parallèle:
 
 tensorboard --logdir saved/log/
 
@@ -19,4 +31,3 @@ On peut alors afficher trois figures, le loss en focntion de l'époque, l'accura
 
 Cette architecture est tirée de https://github.com/moemen95/Pytorch-Project-Template .
 De nombreuses fonctions sont tirées de pytorch et de scikit learn.
-
