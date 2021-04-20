@@ -20,7 +20,7 @@ import torch.nn.functional as F
 
 
 def main(config):
-    print("DEBUT DU PROGRAMME")
+    print("START OF THE PROGRAM")
 
     # fix random seeds for reproducibility
     SEED = 1234
@@ -36,30 +36,22 @@ def main(config):
     
 
     device, device_ids = prepare_device(config['n_gpu'])
-    #Ce code marche et oui hahaha
-    logger = config.get_logger('train') # Pour tensorBoard
-    train_loader = config.init_obj('data_loader', module_data1)
 
+    logger = config.get_logger('train') # Logger for tensorBoard
+
+    #we call our own DataLoader here
+    train_loader = config.init_obj('data_loader', module_data1)
+    #our DataLoader returns a Dataloader for the validation set
     valid_data_loader = train_loader.split_validation()
     
 
 
-    
-    #model = models.alexnet(pretrained=True).to(device)
-    print("DEBUT")
+    # we load the model
     model = config.init_obj('model', model_mult)
-    print("DEBUT")
     model = model.getModel()
     model = model.to(device)
-    model.train() # deja fait dans trainer
-    print("FIIIIIN")
 
-    #model = models.resnet18(pretrained=True)
-    #model = models.alexnet(pretrained=True)
-    #print(model)
-    #model.fc = nn.Linear(512, 2)
-    #model = model.to(device)
-
+    #print model's infog
     logger.info(model)
 
     if len(device_ids) > 1:
@@ -75,7 +67,6 @@ def main(config):
     optimizer = config.init_obj('optimizer', torch.optim, trainable_params)
     lr_scheduler = config.init_obj('lr_scheduler', torch.optim.lr_scheduler, optimizer)
 
-    # PARTIE OK FIN
 
     trainer = Trainer(model, criterion, metrics, optimizer,
                       config=config,
@@ -87,7 +78,7 @@ def main(config):
     trainer.train()
 
 
-    print("FIN DU PROGRAMME")
+    print("END OF THE PROGRAM")
 
 
 if __name__ == '__main__': #ne pas modifier cette fonction
@@ -106,5 +97,4 @@ if __name__ == '__main__': #ne pas modifier cette fonction
         CustomArgs(['--bs', '--batch_size'], type=int, target='data_loader;args;batch_size')
     ]
     config = ConfigParser.from_args(args, options)
-    #print(torch.cuda.is_available()) # affiche si cuda est dispo ou non
     main(config)

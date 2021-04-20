@@ -2,8 +2,16 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import torch
 import glob
-import os
-import sys
+
+import os,sys,inspect
+
+#Add these three lines of code to facilitate the import of the modules
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0,parentdir)
+
+
+
 from pathlib import Path
 import data_loader.data_loaders as module_data
 from utils.util import prepare_device

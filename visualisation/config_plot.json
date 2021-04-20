@@ -2,8 +2,8 @@
     "name": "Plot", 
     "n_gpu": 1,
 
-    "model_path": "saved/models/Rapport/0420_015105/checkpoint-best-epoch.pth",
-    "affiche": "saved/models/Rapport/0420_015105/metrics.csv",
+    "model_path": "../saved/models/Rapport/0420_015105/checkpoint-best-epoch.pth",
+    "affiche": "../saved/models/Rapport/0420_015105/metrics.csv",
 
 
     "model": {
@@ -19,8 +19,8 @@
    "data_loader": {
         "type": "odr_data_loader",
         "args": {
-            "data_dir": "data/ODIR-5K/csv/full_prepro.csv",
-            "image_dir": "data/ODIR-5K/ODIR-5K/preprocess_graham/",
+            "data_dir": "../data/ODIR-5K/csv/full_prepro.csv",
+            "image_dir": "../data/ODIR-5K/ODIR-5K/preprocess_graham/",
             "batch_size": 128,
             "shuffle": false,
             "equal_dist": true,

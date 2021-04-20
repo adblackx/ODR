@@ -2,7 +2,7 @@
 Ocular Disease Recognition
 
 Pour pouvoir exécter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing.
-Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows).
+Le preprocessing se trouve dans le dossier utils ( ou bien à la racine en raison de bugs pour certains sur windows). Il faut d'abord décompresser l'archive du projet, et le mettre dans un dossier par exemple "data", et dans le fichier plot.py dans le main, il faut alors préciser le maths, du csv, des données bruts
 
 Toutefois, si le preprocessing ne marche pas, voici les images:
 https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4

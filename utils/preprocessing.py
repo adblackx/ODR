@@ -10,10 +10,8 @@ from torchvision.transforms import ToTensor, Lambda, Compose
 import matplotlib.pyplot as plt
 import torchvision.transforms as transforms 
 from PIL import Image,ImageOps
-#from base.base_data_loader import BaseDataLoader
-#from data_loader.dataset import Dataset
 from torch.utils.data.dataloader import default_collate
-#from sklearn.decomposition import PCA
+import os,sys,inspect
 
 from os import listdir
 from os.path import isfile, join
@@ -28,8 +26,13 @@ from keyphrases import diagnostic_keyphrases, diagnostic_normale_or_not
 
 
 def crop(image): 
+	"""
+		Remove vertical black borders (the image must be already normalized)
+		image: the input image
+	"""
+
 	image=np.asarray (image)
-	# Remove vertical black borders (the image must be already normalized)
+	
 	sums = image.sum(axis=0)
 	sums = sums.sum(axis=1)
 	filter_arr = []
@@ -57,45 +60,62 @@ def crop(image):
 	return image
 
 def resize(image, IMG_SIZE = 512):
+
+	"""
+	resize the image to have the same size between all the images (because of different image resolutions)
+	and conversion of the color of the image because by default cv2 reads image in blue color
+	in the resize, the ration = 1 by default because pixel height = pixel width
+	
+	image: the input image
+	IMG_SIZE: size of the output image
+
+	"""
 	image = np.asarray(image)
 	norm_img = np.zeros(image.shape)
 	# normalisation 0 ou 1
 	norm_img = cv2.normalize(image, norm_img, 0, 255, cv2.NORM_MINMAX)
 
-	# redimension de l'image pour avoir meme dimension entre toutes les images (à cause image resolution differentes)
-	# et conversion de la couleur de l'image car par defaut cv2 lit image en couleur bleue
-	# dans le resize, le ration = 1 par defaut car hauteur pixel = largeur pixel
+
 	image = cv2.resize(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), (IMG_SIZE, IMG_SIZE))
 
 	image = Image.fromarray(image)
 	return image
 
 def scaleRadius(img, scale):
+	"""
+		rescale the images to have the same radius
+		image: the input image
+		scale: scale of the radius	
+	"""
+
 	radius = int(img.shape[0] / 2)
 	x = img[radius, :, :].sum(1)
 	r = (x > x.mean() / 10).sum() / 2
 	s = scale * 1.0 / r
 	return cv2.resize(img, (0, 0), fx=s , fy=s )
 
-# implementation pseudo-code Ben Graham
 def graham(image, scale = 320):
+	"""
+		implementation of the pseudo-code from Ben Graham's study
+		image: the input image
+		scale: scale of the radius
+	"""
 	image = np.asarray (image)
 	
-	# enleve les bordures
+	#  remove the borders
 	# #image = preprocess_image_crop(norm_img)
 
-	#redimensionnement de l'image à un rayon donné
+	#resize the image to a given radius
 	image = scaleRadius(image, scale)
 	
-	#on soustrait la couleur moyenne pour la mapper sur 50% de gris de façon à mieux faire ressortir les constrastes
+	#we subtract the average color to map it on 50% of gray in order to better highlight the contrasts
 	image = cv2.addWeighted(image, 4, cv2.GaussianBlur(image,(0,0), scale / 30), -4, 128)
  
  
-	#on enleve 10% des bordures
+	#we remove 10% of the borders
 	b = np.zeros(image.shape)
 
 	cv2.circle(b, (int(image.shape[1] / 2), int(image.shape[0] / 2)), int(scale * 0.9), (1, 1, 1), -1, 8, 0)
-	#image=image*b+128*(1-b)
 	
 	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 	image = Image.fromarray(image)
@@ -103,14 +123,12 @@ def graham(image, scale = 320):
 	return image
 
 def to_grayscale(image):
-	#suppression des bordures
-	# passage en noir et blanc
-	#image=np.asarray (image)
+	# switch to black and white
 	image = ImageOps.grayscale(image)
-	#image=Image.fromarray (image)
 	return image
 
 def generateCsvFromRaw(DATA_PATH):
+
 	data = pd.read_excel(DATA_PATH)
 	LeftText=[]
 	for i, row in data.iterrows():
@@ -204,16 +222,16 @@ def generateCSV(data_path, csv_name, discard_no_labels = True, discard_more_one_
 
 def createPreprocessingFile(filepath, filetarget, prepro):
 	'''
-	filepath : chemin d'accès au dossier contenant les images à traiter
-	filetarger : chemin vers le dossier où écrire les images (si inexistant il sera créé)
-	prepro : fonction à appliquer au images
+	filepath : path to the folder containing the images to be processed
+	filetarger : path to the folder where to write the images (if none exists it will be created)
+	prepro : function to be applied to the images
 	'''
 	
 	print("Start Prepro Writing")
 	filename = [f for f in listdir(filepath) if isfile(join(filepath, f))]
 	nb_image = len(filename)
 	compteur = 0
-	#vérifie si le fichier target existe si non le crée
+	#check if the target file exists if not create it
 	if not os.path.exists(filetarget):
 		os.makedirs(filetarget)
 	nbFiles = len(filename)
@@ -221,7 +239,7 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 	for img in filename:
 		path = os.path.join(filepath,img)
 		image = Image.open(path)
-		for f in prepro:
+		for f in prepro: # we apply, crop, resize and graham here
 			image = f(image)
 		#image = image.resize((512, 512))
 		path = os.path.join(filetarget,img)
@@ -233,9 +251,17 @@ def createPreprocessingFile(filepath, filetarget, prepro):
 
 
 if __name__=="__main__":
-	#Le code ci-dessous devrait vous générer une série de csv et/ou dataset preprocessé
-	data_path = "../data/ODIR-5K/ODIR-5K/data.xlsx"
-	filetarget = "../data/ODIR-5K/csv/" #ne pas modifier le dossier sera créé automatiquement
+
+
+	#Add these three lines of code to facilitate the import of the modules
+	currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+	parentdir = os.path.dirname(currentdir)
+	sys.path.insert(0,parentdir)
+
+
+	#The code below should generate a series of csv and/or preprocessed dataset
+	data_path = "data/ODIR-5K/ODIR-5K/data.xlsx"
+	filetarget = "data/ODIR-5K/csv/" #do not modify the file will be created automatically
 	if not os.path.exists(filetarget + "full_prepro.csv"):
 		generateCSV(data_path, "full_prepro.csv")
 	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
@@ -245,15 +271,15 @@ if __name__=="__main__":
 	if not os.path.exists(filetarget + "normale_vs_diabetic.csv"):
 		generateCSV(data_path, "normale_vs_malade.csv", diagnostic_keyphrases = diagnostic_normale_or_not)
 
-	#potentiellement changer filepaht, vous pouvez laisser filetarget
 	
-	filepath =  "../data/ODIR-5K/ODIR-5K/Training Images"
-	filetarget = "../data/ODIR-5K/ODIR-5K/preprocess_graham"
-	#filepath = "../data/APTOS/resized train 15"
-	#filetarget = "../data/APTOS/preprocess_graham"
-	#filetarget = "../data/ODIR-5K/ODIR-5K/resize"
+	filepath =  "data/ODIR-5K/ODIR-5K/Training Images" #path to load images
+	filetarget = "data/ODIR-5K/ODIR-5K/preprocess_graham" #path to save the images
+
 	prepro = [crop, resize, graham]
+
 	if not os.path.exists(filetarget):
+		
 		createPreprocessingFile(filepath, filetarget, prepro)
 	elif os.path.getsize(filetarget) == 0:
+		
 		createPreprocessingFile(filepath, filetarget, prepro)

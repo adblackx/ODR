@@ -128,12 +128,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# on ignore tout ce qui se trouve dans data
+# we ignore everything that is in the data folder's
 data/
 input/
 saved/
 datasets/
 note_Ramdane.ipynb
 
-#Pour macOS
+#For macOS
 .DS_Store
