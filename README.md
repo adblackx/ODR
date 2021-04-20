@@ -8,7 +8,9 @@ Ceci est le repo GitHub du projet de reconnaissance de maladies oculaires.
     <img src="./visualisation/rapport/presentation_images/eye_diseases_grid.jpg" style="width:400px;">
 </p>
 
-L'architecture du projet est tirée du [Pytorch Project Template](https://github.com/moemen95/Pytorch-Project-Template), et nous avons également tiré de nombreuses fonctions des librairies PyTorch et scikit-learn. Nous enregistrons le meilleur modèle en fonction de la valid accuracy, vous retrouverez nos résultats dans des CSV et les `config.json` utilisés dans le dossier `visualisation/rapport/csv`.
+Le dataset utilisé proviens de **Kaggle** vous spouvez le retrouver [ici](https://www.kaggle.com/andrewmvd/ocular-disease-recognition-odir5k).
+
+L'architecture du projet est tirée du [Pytorch Project Template](https://github.com/victoresque/pytorch-template), et nous avons également tiré de nombreuses fonctions des librairies PyTorch et scikit-learn. Nous enregistrons le meilleur modèle en fonction de la valid accuracy, vous retrouverez nos résultats dans des CSV et les `config.json` utilisés dans le dossier `visualisation/rapport/csv`.
 
 ---
 ## Installation des packages
