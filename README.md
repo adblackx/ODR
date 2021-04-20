@@ -20,17 +20,25 @@ Pour avoir tous les package utilisés ainsi que les versions correspondantes, ut
 
 ---
 ## Preparation
-Pour pouvoir exécuter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing. Le preprocessing se trouve dans le dossier utils (si bug sur windows, déplacer a la racine). Il faut d'abord décompresser l'archive du projet et le mettre dans un dossier (par exemple "data"). Dans le fichier *plot.py*  il faut préciser dans le main le maths, du csv, des données bruts.
+Pour pouvoir exécuter le programme qui se trouve dans le main, il faut d'abord appliquer un preprocessing. Le preprocessing se trouve dans le dossier utils (si bug sur windows, déplacer a la racine). Il faut d'abord décompresser les données téléchargés sur kaggle et le mettre dans un dossier (par exemple "data"). Dans le fichier *plot.py*  il faut préciser dans le main le paths, du csv, des données bruts.
 
 Des fichiers CSV et de nouvelles images sont alors générées. Les chemins des fichiers CSV générés et des images sont alors à reporter dans les paramètre `data_dir` et `image_dir` de *config.json* respectivement.
 
-Pour ne pas avoir à modifier manuellement les chemins de lecture et d'écriture nous vous recommandons de décompresser le dataset en faisant en sorte d'avoir les images d'entraînement dans `data/ODIR-5K/ODIR-5K/Training Images` et le fichier xlsx qui décrit les données dans `data/ODIR-5K/ODIR-5K/data.xlsx`.
+Toutefois, si le preprocessing ne marche pas vous pouvez télécharger les images pré-traitées [ici](https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4) et les CSV (contenant les labels) [ici](https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0).
 
-Toutefois, si le preprocessing ne marche pas vous pouvez télécharger les images pré-traitées [ici](https://mega.nz/file/1lhkDJhQ#mWqVa9TpHKEHM_BTN8EfCWxjL1eFNlxYh9fGUwoRMF4) et les CSV [ici](https://mega.nz/file/UwpmBRyQ#_Ygfeoiw6DksUEi2zlJ8pm1YKQ3MywXuubloDhVyBk0).
+Pour ne pas avoir à modifier manuellement les chemins de lecture et d'écriture nous vous recommandons :
+
+* Si vous téléchargez les données depuis Kaggle de décompresser le dataset en faisant en sorte d'avoir les images d'entraînement dans `data/ODIR-5K/ODIR-5K/Training Images` et le fichier `data.xlsx` qui décrit les données dans `data/ODIR-5K/ODIR-5K/data.xlsx`.
+
+* Si vous teléchargé nos csv et image pré-traités de mettre les images dans `data/ODIR-5K/ODIR-5K/preprocess_graham` et les csv dans `data/ODIR-5K/csv`
+
+
 
 ## Execution d'une configuration
 
 L'exécution se fait depuis la racine du projet avec la commande `python main.py -c config.json`.
+
+`config.json` vous permez de configurer le modèle, le dataloader, les metrics et le trainer
 
 :warning: Deux modèles utilisent une donnée supplémentaire (telle que le sexe ou l'âge): **mymodel** et **myAlexnet**. Il faut alors mettre le paramètre `extended` à true dans le *config.json* pour utiliser les bons Data et Trainer.
 
