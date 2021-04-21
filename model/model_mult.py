@@ -8,6 +8,7 @@ import torchvision
 from model.myAlexnet import myAlexnet
 from model.alexnet_custom import alexnetcustom
 from model.mymodel import MyModel
+from model.mymodel2 import MyModel2
 from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
@@ -67,9 +68,19 @@ class Model_Mult():
 		elif model_name == "mymodel":
 			""" Resnet18
 			"""
-			size_out = num_classes*100
-			model_cnn = self.initialize_model("vgg", size_out, feature_extract, use_pretrained)
+			size_out = 1000
+			#model_cnn = self.initialize_model("vgg", size_out, feature_extract, use_pretrained)
+			model_cnn = self.initialize_model("alexnet", size_out, feature_extract, use_pretrained)
 			model_ft = MyModel(model_cnn,size_out,num_classes)
+
+		elif model_name == "mymodel2":
+			""" Resnet18
+			"""
+			size_out = 1000
+			model_cnn = self.initialize_model("vgg", size_out, feature_extract, use_pretrained)
+			#model_cnn = self.initialize_model("alexnet", size_out, feature_extract, use_pretrained)
+			model_ft = MyModel2(model_cnn,size_out,num_classes)
+
 
 
 

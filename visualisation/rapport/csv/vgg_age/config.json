@@ -12,13 +12,8 @@
         "args": {
             "num_classes": 8,
             "feature_extract": false,
-<<<<<<< HEAD
             "use_pretrained": true,
             "model_name": "mymodel2"
-=======
-            "use_pretrained": false,
-            "model_name": "alexnet"
->>>>>>> main
         }
     },
     "data_loader": {

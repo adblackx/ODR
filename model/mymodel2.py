@@ -11,17 +11,18 @@ def conv_block(input_size, output_size):
 
     return block
 
-class MyModel(nn.Module):
+class MyModel2(nn.Module):
     def __init__(self,model_cnn,size_out,num_classes):
         
-        super(MyModel, self).__init__()
+        super(MyModel2, self).__init__()
         self.cnn = model_cnn # un model pre entrainé au paravant
-        
-        self.fc1 = nn.Linear((size_out+1)  , 60) # 512 = btachsize et 20 c'est moi qui ai choisit au pif mdr
-        self.fc2 = nn.Linear(60, num_classes)
+        self.classifier = nn.Linear(size_out +1, num_classes)
+
+        #self.fc1 = nn.Linear((num_classes+1)  , 60) # 512 = btachsize et 20 c'est moi qui ai choisit au pif mdr
+        #self.fc2 = nn.Linear(60, num_classes)
         
     def forward(self, image, tab):
-        x1 = self.cnn(image)
+        """x1 = self.cnn(image)
         x2 = tab
 
         x2 =  torch.unsqueeze(x2, 1)
@@ -29,8 +30,18 @@ class MyModel(nn.Module):
         x = torch.cat((x2, x1), dim=1)
         print(x.size())
         x = F.relu(self.fc1(x))
-        x = self.fc2(x)
+        x = self.fc2(x)"""
+
+        x1 = self.cnn(image)
+        x2 = tab
+        print(x1.size())
+        print(x2.size())
+        
+        x2 =  torch.unsqueeze(x2, 1)
+        features = torch.cat([x1, x2], dim=1)
 
 
-        return x
+
+
+        return self.classifier(features)
 

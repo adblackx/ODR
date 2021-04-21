@@ -26,6 +26,7 @@ from figures import Plot
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
+
 @torch.no_grad() # turn off gradients during inference for memory effieciency
 def get_all_preds(network, dataloader):
 	"""function to return the number of correct predictions across data set"""
